@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petualangan Luas: Sport & Art Edition</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Quicksand:wght@400..700&display=swap" rel="stylesheet">
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background-color: #F8FAFC;
+    }
+    h1, h2, h3, h4, .title-font {
+      font-family: 'Fredoka', sans-serif;
+    }
+    .slide-active {
+      display: block;
+    }
+    .slide-inactive {
+      display: none;
+    }
+    /* Grid Canvas Styling */
+    .grid-dot {
+      background-image: radial-gradient(#CBD5E1 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between overflow-x-hidden">
+
+  <!-- TOP HEADER & PROGRESS BAR -->
+  <header class="bg-white shadow-sm border-b border-slate-100 py-3 px-6 sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">🎨</span>
+        <div>
+          <h1 class="text-xl font-bold text-indigo-600">Petualangan Luas Bidang</h1>
+          <p class="text-xs text-slate-500 font-medium">Kurikulum Merdeka • Kelas 3 SD Fast Learning</p>
+        </div>
+        <span class="text-3xl">⚽</span>
+      </div>
+
+      <!-- Slide Indicator -->
+      <div class="flex items-center gap-3 w-full sm:w-auto justify-end">
+        <div class="text-right">
+          <span class="text-xs text-slate-400 font-bold block uppercase tracking-wider">Langkah Belajar</span>
+          <span id="slide-num-text" class="text-sm font-black text-indigo-500">Slide 1 dari 30</span>
+        </div>
+        <div class="w-32 sm:w-48 bg-slate-100 h-3 rounded-full overflow-hidden border border-slate-200">
+          <div id="slide-progress-bar" class="bg-gradient-to-r from-cyan-400 to-indigo-500 h-full rounded-full transition-all duration-300" style="width: 3.33%"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="max-w-7xl w-full mx-auto p-4 sm:p-6 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- LEFT SIDE: SLIDE PLAYER CONTAINER (8 COLS) -->
+    <div class="lg:col-span-8 flex flex-col gap-4">
+      
+      <!-- Slide Wrapper -->
+      <div class="bg-white rounded-[32px] p-6 sm:p-8 shadow-md border-b-8 border-indigo-100 min-h-[500px] flex flex-col justify-between transition-all duration-300 relative">
+        
+        <!-- Interactive Slides Rendering Target -->
+        <div id="slide-viewport" class="flex-grow">
+          <!-- Slide contents will be dynamically injected here via JavaScript -->
+        </div>
+
+        <!-- NAVIGATION CONTROLS -->
+        <div class="flex items-center justify-between mt-8 border-t border-slate-100 pt-5">
+          <button id="btn-prev" onclick="prevSlide()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-5 py-3 rounded-2xl transition-all flex items-center gap-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+            ⬅️ Kembali
+          </button>
+
+          <!-- Slide Jump Selector for Fast Learners -->
+          <div class="hidden md:flex items-center gap-1">
+            <span class="text-xs text-slate-400 font-bold mr-1">Lompat ke:</span>
+            <select id="slide-selector" onchange="jumpToSlide(this.value)" class="bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs font-bold text-slate-600 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+
+          <button id="btn-next" onclick="nextSlide()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-6 py-3 rounded-2xl shadow-md flex items-center gap-2 transition-all text-sm">
+            Lanjut ➡️
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE: INTERACTIVE SMART SCRATCHPAD & COMPASS TOOL (4 COLS) -->
+    <div class="lg:col-span-4 flex flex-col gap-6">
+      
+      <!-- Kid's Favorite Doodle Pad (Drawing & Sketching) -->
+      <div class="bg-white rounded-[32px] p-6 shadow-md border-b-8 border-emerald-200 flex flex-col gap-3">
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-bold text-emerald-600 flex items-center gap-1.5">
+            ✏️ Kanvas Oret-oretan & Gambar
+          </h3>
+          <button onclick="clearScratchpad()" class="text-xs bg-rose-50 hover:bg-rose-100 text-rose-500 font-bold px-3 py-1.5 rounded-xl border border-rose-100 transition-all">
+            Hapus
+          </button>
+        </div>
+        <p class="text-xs text-slate-500 leading-relaxed">Gunakan spidol digital ini untuk menggambar bidang datar atau menghitung perkalian!</p>
+        
+        <!-- Canvas wrapper -->
+        <div class="relative w-full bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden" style="height: 180px;">
+          <canvas id="scratchpad" class="absolute inset-0 w-full h-full cursor-crosshair touch-none"></canvas>
+        </div>
+
+        <!-- Color Palette for Drawing Enthusiasts -->
+        <div class="flex justify-between items-center mt-1">
+          <div class="flex gap-2">
+            <button onclick="changePenColor('#10B981')" class="w-6 h-6 rounded-full bg-emerald-500 border-2 border-white ring-2 ring-emerald-300 focus:outline-none"></button>
+            <button onclick="changePenColor('#3B82F6')" class="w-6 h-6 rounded-full bg-blue-500 border-2 border-white hover:ring-2 hover:ring-blue-300 focus:outline-none"></button>
+            <button onclick="changePenColor('#F59E0B')" class="w-6 h-6 rounded-full bg-amber-500 border-2 border-white hover:ring-2 hover:ring-amber-300 focus:outline-none"></button>
+            <button onclick="changePenColor('#EF4444')" class="w-6 h-6 rounded-full bg-rose-500 border-2 border-white hover:ring-2 hover:ring-rose-300 focus:outline-none"></button>
+            <button onclick="changePenColor('#111827')" class="w-6 h-6 rounded-full bg-slate-900 border-2 border-white hover:ring-2 hover:ring-slate-300 focus:outline-none"></button>
+          </div>
+          <span class="text-[11px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">Spidol Aktif</span>
+        </div>
+      </div>
+
+      <!-- Quick Learning Companion Badge -->
+      <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-[32px] p-6 border border-indigo-100 flex flex-col gap-3">
+        <h4 class="font-bold text-indigo-800 text-sm flex items-center gap-1.5">
+          🚀 Fast-Learner Corner
+        </h4>
+        <p class="text-xs text-indigo-950 leading-relaxed">
+          Hai juara! Kamu belajar dengan sangat cepat. Di sini, kita tidak hanya menghafal rumus, tapi juga mengeksplorasi hubungan seni gambar dan desain lapangan olahraga secara matematis!
+        </p>
+        <div class="bg-white/70 p-3 rounded-2xl text-[11px] text-indigo-900 flex flex-col gap-1.5">
+          <div class="font-bold">⭐ Misi Hari Ini:</div>
+          <div>Menguasai konsep luas permukaan, menghitung ubin lapangan, dan mendesain karya seni persegi panjang!</div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- SCORE NOTIFICATION SOUNDS (Web Audio API Synthesizer) -->
+  <audio id="audio-correct" class="hidden"></audio>
+  
+  <!-- Footer -->
+  <footer class="bg-slate-100 border-t border-slate-200 py-3 text-center text-xs text-slate-400 font-semibold mt-6">
+    Petualangan Interaktif Luas • Dibuat khusus untuk Pembelajar Cepat Kelas 3 SD
+  </footer>
+
+  <!-- SCRIPT UTAMA & DATA PRESENTASI 30 SLIDE -->
+  <script>
+    // Audio Synthesizer untuk Kid Feedback (Tanpa File Eksternal)
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playSoundEffect(type) {
+      try {
+        initAudio();
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'success') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
+          setTimeout(() => osc.frequency.setValueAtTime(659.25, audioCtx.currentTime), 100); // E5
+          setTimeout(() => osc.frequency.setValueAtTime(783.99, audioCtx.currentTime), 200); // G5
+          gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + 0.4);
+        } else if (type === 'fail') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(220, audioCtx.currentTime); // A3
+          setTimeout(() => osc.frequency.setValueAtTime(147, audioCtx.currentTime), 120); // D3
+          gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.5);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + 0.5);
+        } else if (type === 'draw') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+          gain.gain.setValueAtTime(0.02, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+          osc.start(audioCtx.currentTime);
+          osc.stop(audioCtx.currentTime + 0.05);
+        }
+      } catch (e) {
+        console.log("Audio not supported");
+      }
+    }
+
+    // STATE KENDALI SLIDE
+    let currentSlide = 0;
+    const totalSlides = 30;
+    
+    // Simpan state jawaban soal latihan agar persisten saat slide bolak-balik
+    let quizAnswers = {};
+
+    // ------------------- DATA 30 SLIDE MATERI LUAS -------------------
+    // Catatan Perbaikan: Seluruh \text, \times, \dots, \triangle dll. telah di double-escape \\ agar aman dibaca JS string
+    const slidesData = [
+      // 1. JUDUL
+      {
+        title: "Selamat Datang di Petualangan Luas Bidang!",
+        subtitle: "Sport & Art Edition",
+        category: "JUDUL UTAMA",
+        html: `
+          <div class="text-center flex flex-col items-center gap-6 py-6">
+            <span class="text-6xl animate-bounce">🏆🎨</span>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-indigo-600 leading-tight">Mengejar Batas: Mengukur Luas Lapangan & Kanvas Seni</h1>
+            <p class="text-base text-slate-600 max-w-lg leading-relaxed">
+              Hai anak cerdas! Apakah kamu suka berolahraga atau menggambar? Hari ini kita akan menjelajah cara mengukur "Luas" permukaan lapangan sepak bola, lapangan basket, hingga kertas gambarmu!
+            </p>
+            <div class="flex gap-4 mt-2">
+              <span class="bg-amber-100 text-amber-800 text-xs px-3 py-1.5 rounded-full font-bold">⚽ Tema Olahraga</span>
+              <span class="bg-sky-100 text-sky-800 text-xs px-3 py-1.5 rounded-full font-bold">🖌️ Tema Menggambar</span>
+            </div>
+          </div>
+        `
+      },
+      // 2. MEET COACH
+      {
+        title: "Kenalkan Dua Asisten Petualangmu!",
+        subtitle: "Coach Aris & Kak Drawy",
+        category: "PERKENALAN",
+        html: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center py-4">
+            <div class="bg-amber-50 p-6 rounded-2xl border-2 border-amber-200 text-center flex flex-col items-center gap-2">
+              <span class="text-5xl">🏃‍♂️</span>
+              <h3 class="text-lg font-bold text-amber-800">Coach Aris</h3>
+              <p class="text-xs text-amber-950">"Aku suka berlari di lapangan sepak bola! Aku akan mengajakmu mengukur seberapa banyak rumput hijau yang bisa kita gelar di lapangan!"</p>
+            </div>
+            <div class="bg-sky-50 p-6 rounded-2xl border-2 border-sky-200 text-center flex flex-col items-center gap-2">
+              <span class="text-5xl">👩‍🎨</span>
+              <h3 class="text-lg font-bold text-sky-800">Kak Drawy</h3>
+              <p class="text-xs text-sky-950">"Aku sangat suka melukis karya seni! Mari kita cari tahu seberapa besar kertas gambar yang kita perlukan untuk melukis robot impian!"</p>
+            </div>
+          </div>
+        `
+      },
+      // 3. PETA PETUALANGAN
+      {
+        title: "Peta Petualangan Kita Hari Ini",
+        subtitle: "Rute Cepat Menuju Juara Luas",
+        category: "PETA BELAJAR",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-sm text-slate-600">Siswa fast-learning seperti kamu akan melaju melalui rute emas ini:</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+              <div class="p-3 bg-indigo-50 border border-indigo-200 rounded-xl text-xs font-bold text-indigo-700">1. Warm-Up & Nyata (Slide 6-11)</div>
+              <div class="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-700">2. Konsep & Rumus (Slide 12-18)</div>
+              <div class="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs font-bold text-amber-700">3. Kuis Hitung (Slide 19-23)</div>
+              <div class="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs font-bold text-rose-700">4. Kuis Cerita (Slide 24-28)</div>
+            </div>
+            <div class="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-2xl flex items-center gap-3">
+              <span class="text-2xl">🧭</span>
+              <p class="text-xs text-slate-600">Tekan tombol <strong>Lanjut</strong> di bawah kapan pun kamu siap melaju ke slide berikutnya!</p>
+            </div>
+          </div>
+        `
+      },
+      // 4. TUJUAN 1
+      {
+        title: "Tujuan Pembelajaran - Bagian I",
+        subtitle: "Memahami Apa Itu Luas",
+        category: "TUJUAN",
+        html: `
+          <div class="py-4 flex flex-col gap-4">
+            <div class="flex items-center gap-4 bg-sky-50 p-4 rounded-2xl border border-sky-100">
+              <span class="text-4xl">📐</span>
+              <div>
+                <h4 class="font-bold text-sky-800 text-sm">Mengetahui Luas Permukaan</h4>
+                <p class="text-xs text-sky-950">Kamu akan belajar bahwa luas adalah daerah di dalam batas-batas suatu bangun datar (seperti permukaan lapangan atau kanvas melukis).</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 bg-emerald-50 p-4 rounded-2xl border border-emerald-100">
+              <span class="text-4xl">🏁</span>
+              <div>
+                <h4 class="font-bold text-emerald-800 text-sm">Melakukan Perbandingan Langsung</h4>
+                <p class="text-xs text-emerald-950">Mampu membandingkan dua bidang datar secara langsung untuk menentukan mana yang permukaannya lebih besar tanpa kebingungan.</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // 5. TUJUAN 2
+      {
+        title: "Tujuan Pembelajaran - Bagian II",
+        subtitle: "Menghitung Secara Presisi",
+        category: "TUJUAN",
+        html: `
+          <div class="py-4 flex flex-col gap-4">
+            <div class="flex items-center gap-4 bg-amber-50 p-4 rounded-2xl border border-amber-100">
+              <span class="text-4xl">🔢</span>
+              <div>
+                <h4 class="font-bold text-amber-800 text-sm">Mengukur Dengan Satuan Baku & Tidak Baku</h4>
+                <p class="text-xs text-amber-950">Menghitung luas menggunakan kotak satuan kecil (tidak baku) hingga menggunakan sentimeter persegi ($L = \\text{cm}^2$) dan meter persegi ($L = \\text{m}^2$).</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-4 bg-rose-50 p-4 rounded-2xl border border-rose-100">
+              <span class="text-4xl">💡</span>
+              <div>
+                <h4 class="font-bold text-rose-800 text-sm">Memecahkan Masalah Kreatif</h4>
+                <p class="text-xs text-rose-950">Menerapkan rumus perkalian ringkas ($p \\times l$) untuk menyelesaikan soal perhitungan dan soal cerita seru olahraga dan seni.</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // 6. WARM-UP 1
+      {
+        title: "Pemanasan Lapangan Olahraga",
+        subtitle: "Mana yang Lebih Luas?",
+        category: "WARM-UP",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-sm text-slate-600">Perhatikan ilustrasi lapangan tenis dan lapangan sepak bola di bawah ini:</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="bg-emerald-100 p-4 rounded-2xl border border-emerald-300 flex flex-col items-center gap-2">
+                <span class="font-bold text-emerald-800 text-xs">Lapangan Tenis (Kecil)</span>
+                <!-- SVG Lapangan Tenis -->
+                <svg class="w-full max-w-[150px] h-[80px]" viewBox="0 0 150 80">
+                  <rect width="150" height="80" fill="#4ADE80" rx="6" />
+                  <rect x="15" y="10" width="120" height="60" fill="none" stroke="white" stroke-width="2" />
+                  <line x1="75" y1="10" x2="75" y2="70" stroke="white" stroke-width="2" />
+                </svg>
+              </div>
+              <div class="bg-indigo-100 p-4 rounded-2xl border border-indigo-300 flex flex-col items-center gap-2">
+                <span class="font-bold text-indigo-800 text-xs">Lapangan Sepak Bola (Besar)</span>
+                <!-- SVG Lapangan Sepak Bola -->
+                <svg class="w-full max-w-[150px] h-[80px]" viewBox="0 0 150 80">
+                  <rect width="150" height="80" fill="#3B82F6" rx="6" />
+                  <rect x="10" y="8" width="130" height="64" fill="none" stroke="white" stroke-width="2" />
+                  <line x1="75" y1="8" x2="75" y2="72" stroke="white" stroke-width="2" />
+                  <circle cx="75" cy="40" r="15" fill="none" stroke="white" stroke-width="2" />
+                </svg>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 mt-2">
+              Secara kasat mata, kita tahu **lapangan sepak bola** jauh lebih luas dari lapangan tenis. Artinya, permukaan tanah yang ditutup oleh rumput lapangan sepak bola jauh lebih banyak!
+            </p>
+          </div>
+        `
+      },
+      // 7. WARM-UP 2
+      {
+        title: "Menutup Meja Gambar",
+        subtitle: "Konsep Luas dengan Kertas Warna",
+        category: "WARM-UP",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-sm text-slate-600">Bayangkan Kak Drawy ingin menutup seluruh permukaan meja gambarnya menggunakan kertas warna-warni:</p>
+            <div class="flex justify-center my-2">
+              <!-- SVG Meja ditutup kertas warna -->
+              <svg class="w-[240px] h-[120px]" viewBox="0 0 240 120">
+                <!-- Meja -->
+                <rect width="240" height="120" fill="#F59E0B" rx="8" />
+                <!-- Kertas warna-warni persegi -->
+                <rect x="10" y="10" width="45" height="45" fill="#EF4444" rx="4" />
+                <rect x="60" y="10" width="45" height="45" fill="#3B82F6" rx="4" />
+                <rect x="110" y="10" width="45" height="45" fill="#10B981" rx="4" />
+                <rect x="160" y="10" width="45" height="45" fill="#F59E0B" rx="4" />
+                <rect x="10" y="60" width="45" height="45" fill="#EC4899" rx="4" />
+                <rect x="60" y="60" width="45" height="45" fill="#8B5CF6" rx="4" />
+                <rect x="110" y="60" width="45" height="45" fill="#06B6D4" rx="4" />
+                <span class="text-[10px] text-white font-bold" style="position: absolute;">Penuh!</span>
+              </svg>
+            </div>
+            <p class="text-xs text-slate-500 leading-relaxed">
+              Jumlah total kertas warna kecil yang dibutuhkan untuk menutupi seluruh meja tanpa celah dan tanpa tumpang tindih itulah yang kita sebut dengan **Luas Meja** dalam satuan tidak baku kertas warna!
+            </p>
+          </div>
+        `
+      },
+      // 8. WARM-UP 3
+      {
+        title: "Menghitung Kotak Buku Gambar",
+        subtitle: "Satuan Kotak Persegi",
+        category: "WARM-UP",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-sm text-slate-600">Berapa luas lukisan pixel art berwujud hati ini? Hitung jumlah kotak satuan warna pink!</p>
+            <div class="flex justify-center my-2">
+              <div class="grid grid-cols-5 gap-1 bg-slate-100 p-2 rounded-xl">
+                <!-- Row 1 -->
+                <div class="w-8 h-8 bg-white border border-slate-200"></div>
+                <div class="w-8 h-8 bg-rose-400 border border-slate-200 rounded"></div>
+                <div class="w-8 h-8 bg-white border border-slate-200"></div>
+                <div class="w-8 h-8 bg-rose-400 border border-slate-200 rounded"></div>
+                <div class="w-8 h-8 bg-white border border-slate-200"></div>
+                <!-- Row 2 -->
+                <div class="w-8 h-8 bg-rose-400 border border-slate-200 rounded"></div>
+                <div class="w-8 h-8 bg-rose-400 border border-slate-200 rounded"></div>
+                <div class="w-8 h-8 bg-rose-400 border border-slate-200 rounded"></div>
+                <div class="w-8 h-8 bg-rose-400 border border-slate-200 rounded"></div>
+                <div class="w-8 h-8 bg-rose-400 border border-slate-200 rounded"></div>
+                <!-- Row 3 -->
+                <div class="w-8 h-8 bg-white border border-slate-200"></div>
+                <div class="w-8 h-8 bg-rose-400 border border-slate-200 rounded"></div>
+                <div class="w-8 h-8 bg-rose-400 border border-slate-200 rounded"></div>
+                <div class="w-8 h-8 bg-rose-400 border border-slate-200 rounded"></div>
+                <div class="w-8 h-8 bg-white border border-slate-200"></div>
+                <!-- Row 4 -->
+                <div class="w-8 h-8 bg-white border border-slate-200"></div>
+                <div class="w-8 h-8 bg-white border border-slate-200"></div>
+                <div class="w-8 h-8 bg-rose-400 border border-slate-200 rounded"></div>
+                <div class="w-8 h-8 bg-white border border-slate-200"></div>
+                <div class="w-8 h-8 bg-white border border-slate-200"></div>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 text-center">
+              Jika kita hitung, ada **11 kotak merah muda**. Berarti, luas lukisan hati ini adalah **11 kotak satuan**! Sangat mudah, bukan?
+            </p>
+          </div>
+        `
+      },
+      // 9. REAL WORLD 1
+      {
+        title: "Aplikasi Nyata: Lapangan Sepak Bola",
+        subtitle: "Mengapa Rumput Harus Dihitung?",
+        category: "DUNIA NYATA",
+        html: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center py-4">
+            <div>
+              <p class="text-sm text-slate-600 leading-relaxed mb-3">
+                Sebelum pertandingan liga besar dimulai, pengelola stadion olahraga harus membeli rumput gulung baru untuk dipasang di atas tanah stadion.
+              </p>
+              <p class="text-xs text-slate-500 leading-relaxed">
+                Mereka tidak bisa asal tebak membeli jumlah rumput. Jika kurang, lapangan akan botak! Jika kelebihan, uang akan terbuang sia-sia. Di sinilah **ilmu menghitung luas lapangan** menyelamatkan mereka!
+              </p>
+            </div>
+            <div class="flex justify-center">
+              <svg class="w-full max-w-[200px] h-[150px]" viewBox="0 0 200 150">
+                <rect width="200" height="150" fill="#22C55E" rx="12" />
+                <circle cx="100" cy="75" r="30" fill="none" stroke="white" stroke-width="3" />
+                <line x1="0" y1="75" x2="200" y2="75" stroke="white" stroke-width="3" />
+                <rect x="60" y="0" width="80" height="30" fill="none" stroke="white" stroke-width="3" />
+                <rect x="60" y="120" width="80" height="30" fill="none" stroke="white" stroke-width="3" />
+              </svg>
+            </div>
+          </div>
+        `
+      },
+      // 10. REAL WORLD 2
+      {
+        title: "Aplikasi Nyata: Buku Gambar",
+        subtitle: "Ukuran Kertas yang Berbeda",
+        category: "DUNIA NYATA",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-sm text-slate-600">Mengapa kertas gambar gambar A3 terasa jauh lebih puas saat dipakai melukis daripada kertas A4?</p>
+            <div class="flex justify-center gap-6 my-2">
+              <div class="bg-amber-100 p-3 rounded-lg border-2 border-amber-300 w-24 h-32 text-center flex flex-col justify-between">
+                <span class="text-xs font-bold text-amber-800">Kertas A4</span>
+                <span class="text-2xl">📄</span>
+                <span class="text-[10px] text-amber-600">Lebih Kecil</span>
+              </div>
+              <div class="bg-sky-100 p-3 rounded-lg border-2 border-sky-300 w-36 h-48 text-center flex flex-col justify-between">
+                <span class="text-xs font-bold text-sky-800">Kertas A3</span>
+                <span class="text-4xl">🖼️</span>
+                <span class="text-[10px] text-sky-600">Lebih Luas!</span>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500 text-center">
+              Kertas A3 memiliki **luas dua kali lipat** dari kertas A4. Sehingga artis cilik memiliki daerah melukis yang jauh lebih lapang!
+            </p>
+          </div>
+        `
+      },
+      // 11. REAL WORLD 3
+      {
+        title: "Aplikasi Nyata: Jersey Olahraga",
+        subtitle: "Menempelkan Logo Tim",
+        category: "DUNIA NYATA",
+        html: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center py-4">
+            <div class="flex justify-center">
+              <!-- SVG Jersey -->
+              <svg class="w-[160px] h-[160px]" viewBox="0 0 100 100">
+                <path d="M 20,10 L 35,5 L 50,15 L 65,5 L 80,10 L 80,30 L 70,30 L 70,90 L 30,90 L 30,30 L 20,30 Z" fill="#EF4444" stroke="#B91C1C" stroke-width="2" />
+                <rect x="42" y="35" width="16" height="16" fill="#F59E0B" rx="2" />
+                <text x="50" y="47" font-size="10" font-weight="bold" fill="white" text-anchor="middle">10</text>
+              </svg>
+            </div>
+            <div class="flex flex-col gap-2">
+              <p class="text-sm text-slate-600">
+                Saat desainer mencetak nomor punggung pada jersey tim, mereka harus mengukur seberapa luas area kain kaos yang tersedia.
+              </p>
+              <p class="text-xs text-slate-500">
+                Jika logo atau nomor terlalu besar melebihi luas permukaan kaos, logo akan terlipat ke ketiak atau bagian bawah baju dan tidak nyaman dibaca!
+              </p>
+            </div>
+          </div>
+        `
+      },
+      // 12. KONSEP 1
+      {
+        title: "Apa Itu Sebenarnya 'Luas'?",
+        subtitle: "Definisi Sederhana & Benar",
+        category: "KONSEP DASAR",
+        html: `
+          <div class="py-4 flex flex-col gap-4">
+            <div class="bg-indigo-50 border-l-4 border-indigo-500 p-4 rounded-r-2xl">
+              <h4 class="font-extrabold text-indigo-800 text-base mb-1">Definisi Luas:</h4>
+              <p class="text-xs text-indigo-950 leading-relaxed">
+                **Luas** adalah ukuran besarnya permukaan suatu bidang dua dimensi yang dibatasi oleh garis-garis di sekelilingnya.
+              </p>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+              <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl">
+                <span class="font-bold text-slate-800 text-xs block mb-1">Keliling (Batas Luar):</span>
+                <p class="text-[11px] text-slate-500">Panjang seluruh garis tepi luar bidang pagar pengikat.</p>
+              </div>
+              <div class="p-3.5 bg-emerald-50 border border-emerald-200 rounded-xl">
+                <span class="font-bold text-emerald-800 text-xs block mb-1">Luas (Isi Dalam):</span>
+                <p class="text-[11px] text-emerald-500">Seluruh wilayah permukaan datar yang ada di dalam pagar.</p>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // 13. KONSEP 2
+      {
+        title: "Mengukur dengan Satuan Tidak Baku",
+        subtitle: "Eksperimen Sederhana",
+        category: "KONSEP DASAR",
+        html: `
+          <div class="flex flex-col gap-3 py-2">
+            <p class="text-sm text-slate-600 leading-relaxed">
+              Kita bisa mengukur luas buku gambar menggunakan benda-benda kecil di sekitar kita. Benda penutup ini disebut **satuan tidak baku**.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-center my-1">
+              <div class="p-3 bg-white border border-slate-200 rounded-2xl shadow-sm">
+                <span class="text-2xl block">🪙</span>
+                <span class="font-bold text-xs text-slate-700">Koin Logam</span>
+              </div>
+              <div class="p-3 bg-white border border-slate-200 rounded-2xl shadow-sm">
+                <span class="text-2xl block">🃏</span>
+                <span class="font-bold text-xs text-slate-700">Kartu Bermain</span>
+              </div>
+              <div class="p-3 bg-white border border-slate-200 rounded-2xl shadow-sm">
+                <span class="text-2xl block">🏷️</span>
+                <span class="font-bold text-xs text-slate-700">Ubin Lantai</span>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500">
+              *Kelemahan:* Hasil pengukuran bisa berbeda-beda tiap orang karena ukuran kartu atau koin milik masing-masing anak tidak persis sama!
+            </p>
+          </div>
+        `
+      },
+      // 14. KONSEP 3
+      {
+        title: "Mengenal Satuan Baku: Sentimeter Persegi",
+        subtitle: "Dunia yang Adil dan Sama",
+        category: "KONSEP DASAR",
+        html: `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center py-4">
+            <div class="flex flex-col gap-3">
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Agar hasil pengukuran di seluruh dunia sama, kita memakai satuan baku bernama **Sentimeter Persegi** (ditulis dengan lambang $\\text{cm}^2$).
+              </p>
+              <p class="text-xs text-slate-500">
+                Satu $\\text{cm}^2$ adalah luas permukaan sebuah kotak persegi yang memiliki ukuran sisi-sisinya masing-masing panjangnya tepat $1\\text{ cm}$.
+              </p>
+            </div>
+            <div class="flex justify-center">
+              <div class="bg-amber-100 border-2 border-amber-400 p-6 rounded-2xl flex flex-col items-center">
+                <div class="w-16 h-16 bg-amber-400 rounded-md border border-amber-600 flex items-center justify-center font-bold text-white text-xs">
+                  1 cm²
+                </div>
+                <span class="text-xs font-bold text-amber-800 mt-2">Kotak Baku 1 cm x 1 cm</span>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // 15. KONSEP 4
+      {
+        title: "Menemukan Rumus Luas Persegi Panjang",
+        subtitle: "Trik Cepat Tanpa Menghitung Kotak Satu per Satu",
+        category: "RUMUS CEPAT",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-sm text-slate-600">Daripada lelah menghitung kotak satu per satu, kamu yang cerdas bisa memakai rumus ajaib ini:</p>
+            <div class="bg-gradient-to-r from-cyan-400 to-indigo-500 text-white rounded-2xl p-5 text-center shadow-md">
+              <span class="text-xs uppercase tracking-wider font-extrabold opacity-90 block">Rumus Luas Persegi Panjang</span>
+              <span class="text-2xl md:text-3xl font-black block mt-1">$$\\text{Luas} = \\text{panjang} \\times \\text{lebar}$$</span>
+              <span class="text-lg font-bold block mt-1">$$L = p \\times l$$</span>
+            </div>
+            <p class="text-xs text-slate-500">
+              Cukup kalikan jumlah kotak kolom bawah (**panjang**) dengan jumlah kotak baris tegak (**lebar**). Hebat!
+            </p>
+          </div>
+        `
+      },
+      // 16. KONSEP 5
+      {
+        title: "Rumus Luas Persegi (Sisi Kembar)",
+        subtitle: "Spesial untuk Bentuk Sama Sisi",
+        category: "RUMUS CEPAT",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-sm text-slate-600">Persegi adalah persegi panjang yang istimewa karena semua sisinya memiliki ukuran yang kembar sama panjang!</p>
+            <div class="bg-gradient-to-r from-emerald-400 to-teal-500 text-white rounded-2xl p-5 text-center shadow-md">
+              <span class="text-xs uppercase tracking-wider font-extrabold opacity-90 block">Rumus Luas Persegi</span>
+              <span class="text-2xl md:text-3xl font-black block mt-1">$$\\text{Luas} = \\text{sisi} \\times \\text{sisi}$$</span>
+              <span class="text-lg font-bold block mt-1">$$L = s \\times s$$</span>
+            </div>
+            <p class="text-xs text-slate-500">
+              Karena ukuran panjang dan lebarnya sama persis, kita cukup mengalikan ukuran sisi ($s$) dengan sisi ($s$) itu sendiri!
+            </p>
+          </div>
+        `
+      },
+      // 17. LAB EKSPERIMEN INTERAKTIF
+      {
+        title: "Laboratorium Menggambar Luas",
+        subtitle: "Coba Desain Sendiri!",
+        category: "EKSPERIMEN",
+        html: `
+          <div class="flex flex-col gap-3 py-1">
+            <p class="text-xs text-slate-600">Gunakan kontrol di bawah ini untuk membuat desain bidangmu dan amati berapa luas permukaannya otomatis!</p>
+            <div class="grid grid-cols-2 gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-200">
+              <div class="flex flex-col gap-3">
+                <div class="flex flex-col">
+                  <label class="text-xs font-bold text-slate-600">Panjang ($p$): <span id="val-lab-p" class="text-indigo-600">4</span> kotak</label>
+                  <input type="range" min="1" max="8" value="4" oninput="updateLabExperiment('p', this.value)" class="w-full h-2 bg-indigo-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-xs font-bold text-slate-600">Lebar ($l$): <span id="val-lab-l" class="text-indigo-600">3</span> kotak</label>
+                  <input type="range" min="1" max="5" value="3" oninput="updateLabExperiment('l', this.value)" class="w-full h-2 bg-indigo-200 rounded-lg appearance-none cursor-pointer">
+                </div>
+                <div class="bg-white p-3 rounded-xl border border-indigo-100 text-center">
+                  <span class="text-[10px] text-slate-400 block font-bold">HASIL LUAS</span>
+                  <span id="val-lab-result" class="text-lg font-black text-indigo-600">$$4 \\times 3 = 12\\text{ Kotak}$$</span>
+                </div>
+              </div>
+              <div class="flex justify-center">
+                <!-- Sandbox Grid Render -->
+                <div id="sandbox-grid" class="grid gap-1 bg-white p-2 rounded-xl border border-slate-300">
+                  <!-- Generated with JS -->
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      // 18. TIPS KILAT FAST LEARNERS
+      {
+        title: "Trik Kilat Perkalian Luas",
+        subtitle: "Trik Mental Matematika",
+        category: "TRIK JUARA",
+        html: `
+          <div class="py-4 flex flex-col gap-4">
+            <p class="text-sm text-slate-600">Untuk kamu yang cerdas, gunakan trik mental perkalian asosiasi ini saat menghitung luas besar:</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="p-4 bg-sky-50 rounded-2xl border border-sky-100 flex items-start gap-3">
+                <span class="text-2xl">💡</span>
+                <div>
+                  <h4 class="font-bold text-sky-800 text-xs">Pecah Angka Pengali</h4>
+                  <p class="text-[11px] text-sky-950 mt-1">Mengalikan $15 \\times 4$? Pecah menjadi $(10 \\times 4) + (5 \\times 4) = 40 + 20 = 60$!</p>
+                </div>
+              </div>
+              <div class="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-start gap-3">
+                <span class="text-2xl">⚡</span>
+                <div>
+                  <h4 class="font-bold text-amber-800 text-xs">Trik Setengah & Dua Kali</h4>
+                  <p class="text-[11px] text-amber-950 mt-1">Mengalikan $12 \\times 5$? Ubah menjadi setengahnya dikali sepuluh: $6 \\times 10 = 60$!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      
+      // ----------------- SOAL-SOAL MANDIRI (CALCULATION CHALLENGES - 19 to 23) -----------------
+      // 19. TANTANGAN HITUNG 1
+      {
+        title: "Tantangan Hitung 1: Lapangan Bulu Tangkis",
+        subtitle: "Menghitung Luas Persegi Panjang",
+        category: "KUIS HITUNG",
+        html: "", 
+        quiz: {
+          question: "Sebuah lapangan bulu tangkis berbentuk persegi panjang memiliki panjang $13\\text{ m}$ dan lebar $6\\text{ m}$. Berapakah luas total lapangan bulu tangkis tersebut?",
+          options: ["68 m²", "78 m²", "88 m²", "98 m²"],
+          correct: 1, // index of "78 m²"
+          rationale: "Dengan rumus $L = p \\times l$, kita hitung $13 \\times 6 = 78\\text{ m}^2$."
+        }
+      },
+      // 20. TANTANGAN HITUNG 2
+      {
+        title: "Tantangan Hitung 2: Ubin Ruang Ganti Atlet",
+        subtitle: "Menghitung Luas Persegi",
+        category: "KUIS HITUNG",
+        html: "",
+        quiz: {
+          question: "Ubin lantai di ruang ganti pemain sepak bola berbentuk persegi sempurna dengan panjang sisi $30\\text{ cm}$. Berapakah luas satu ubin tersebut?",
+          options: ["60 cm²", "120 cm²", "600 cm²", "900 cm²"],
+          correct: 3,
+          rationale: "Rumus luas persegi adalah $L = s \\times s$. Jadi, $30 \\times 30 = 900\\text{ cm}^2$."
+        }
+      },
+      // 21. TANTANGAN HITUNG 3
+      {
+        title: "Tantangan Hitung 3: Buku Sketsa Seni",
+        subtitle: "Luas Kertas Melukis",
+        category: "KUIS HITUNG",
+        html: "",
+        quiz: {
+          question: "Kak Drawy memiliki buku gambar baru dengan panjang halaman kertas $25\\text{ cm}$ dan lebar $20\\text{ cm}$. Berapa luas kertas sketsa tersebut?",
+          options: ["400 cm²", "450 cm²", "500 cm²", "600 cm²"],
+          correct: 2,
+          rationale: "Menggunakan perkalian cepat: $25 \\times 20 = 500\\text{ cm}^2$."
+        }
+      },
+      // 22. TANTANGAN HITUNG 4
+      {
+        title: "Tantangan Hitung 4: Papan Skor Stadion",
+        subtitle: "Luas Layar Digital",
+        category: "KUIS HITUNG",
+        html: "",
+        quiz: {
+          question: "Layar monitor papan skor digital di lapangan berbentuk persegi panjang dengan panjang $8\\text{ m}$ dan lebar $3\\text{ m}$. Berapakah luas layarnya?",
+          options: ["24 m²", "11 m²", "32 m²", "16 m²"],
+          correct: 0,
+          rationale: "Luas layar persegi panjang dihitung dengan $L = p \\times l = 8 \\times 3 = 24\\text{ m}^2$."
+        }
+      },
+      // 23. TANTANGAN HITUNG 5
+      {
+        title: "Tantangan Hitung 5: Poster Juara Olahraga",
+        subtitle: "Mendesain Poster Besar",
+        category: "KUIS HITUNG",
+        html: "",
+        quiz: {
+          question: "Andi mendesain poster persegi bergambar atlet favoritnya. Panjang sisi luar poster tersebut adalah $50\\text{ cm}$. Berapakah luas poster kreasi Andi?",
+          options: ["100 cm²", "200 cm²", "2.500 cm²", "5.000 cm²"],
+          correct: 2,
+          rationale: "Luas persegi: $L = s \\times s = 50 \\times 50 = 2.500\\text{ cm}^2$."
+        }
+      },
+
+      // ----------------- SOAL CERITA (REAL STORIES - 24 to 28) -----------------
+      // 24. SOAL CERITA 1
+      {
+        title: "Soal Cerita 1: Lapangan Futsal Baru",
+        subtitle: "Menghitung Rumput Sintetis",
+        category: "KUIS CERITA",
+        html: "",
+        quiz: {
+          question: "Sekolah kita ingin memasang karpet rumput sintetis di lapangan futsal baru yang berukuran panjang $20\\text{ m}$ dan lebar $10\\text{ m}$. Jika harga karpet adalah Rp 10.000 per meter persegi, berapa luas karpet yang harus dibeli sekolah?",
+          options: ["30 m²", "100 m²", "200 m²", "300 m²"],
+          correct: 2,
+          rationale: "Luas lapangan dihitung dahulu: $L = 20 \\times 10 = 200\\text{ m}^2$ karpet rumput sintetis."
+        }
+      },
+      // 25. SOAL CERITA 2
+      {
+        title: "Soal Cerita 2: Mural Seni di Stadion",
+        subtitle: "Mewarnai Dinding",
+        category: "KUIS CERITA",
+        html: "",
+        quiz: {
+          question: "Siswa kelas 3 SD menggambar mural raksasa bertema 'Olahraga Bersama' di dinding olahraga sekolah yang berukuran panjang $12\\text{ m}$ dan lebar $2\\text{ m}$. Berapa meter persegi luas dinding yang dihiasi mural tersebut?",
+          options: ["14 m²", "24 m²", "28 m²", "36 m²"],
+          correct: 1,
+          rationale: "Luas dinding vertikal dihitung dengan cara yang sama: $L = 12 \\times 2 = 24\\text{ m}^2$."
+        }
+      },
+      // 26. SOAL CERITA 3
+      {
+        title: "Soal Cerita 3: Karpet Matras Yoga",
+        subtitle: "Alas Gym Kakak",
+        category: "KUIS CERITA",
+        html: "",
+        quiz: {
+          question: "Kakak membeli matras olahraga persegi panjang untuk latihan yoga di rumah. Matras tersebut memiliki panjang $2\\text{ m}$ dan lebar $1\\text{ m}$. Berapakah luas permukaan matras pelindung tersebut?",
+          options: ["2 m²", "3 m²", "4 m²", "1 m²"],
+          correct: 0,
+          rationale: "Luas matras yoga: $L = 2 \\times 1 = 2\\text{ m}^2$."
+        }
+      },
+      // 27. SOAL CERITA 4
+      {
+        title: "Soal Cerita 4: Kolam Renang Anak",
+        subtitle: "Berenang Sehat",
+        category: "KUIS CERITA",
+        html: "",
+        quiz: {
+          question: "Sebuah kolam renang anak di klub olahraga memiliki permukaan air berbentuk persegi panjang dengan ukuran panjang $15\\text{ m}$ dan lebar $4\\text{ m}$. Berapakah luas permukaan kolam renang anak tersebut?",
+          options: ["19 m²", "30 m²", "60 m²", "90 m²"],
+          correct: 2,
+          rationale: "Luas kolam renang: $L = p \\times l = 15 \\times 4 = 60\\text{ m}^2$."
+        }
+      },
+      // 28. SOAL CERITA 5
+      {
+        title: "Soal Cerita 5: Spanduk Dukungan",
+        subtitle: "Semangat Tim Sekolah!",
+        category: "KUIS CERITA",
+        html: "",
+        quiz: {
+          question: "Kelompok seni membuat spanduk kain raksasa berbentuk persegi dengan panjang sisi $6\\text{ m}$ untuk mendukung tim sepak bola sekolah. Berapakah luas total kain spanduk tersebut?",
+          options: ["12 m²", "24 m²", "36 m²", "48 m²"],
+          correct: 2,
+          rationale: "Luas kain spanduk persegi: $L = s \\times s = 6 \\times 6 = 36\\text{ m}^2$."
+        }
+      },
+
+      // 29. REFLEKSI
+      {
+        title: "Bagaimana Perasaan Belajarmu Hari Ini?",
+        subtitle: "Refleksi Diri Pembelajar Cepat",
+        category: "REFLEKSI",
+        html: `
+          <div class="flex flex-col gap-4 py-2">
+            <p class="text-sm text-slate-600 text-center">Pilihlah gambar emoji di bawah yang paling mencerminkan perasaan belajarmu hari ini:</p>
+            <div class="grid grid-cols-3 gap-4 my-2">
+              <button onclick="selectReflection(1)" id="btn-ref-1" class="bg-white hover:bg-emerald-50 border-2 border-slate-200 hover:border-emerald-400 rounded-2xl p-5 flex flex-col items-center gap-2 transition-all">
+                <span class="text-4xl">🤩</span>
+                <span class="font-bold text-xs text-slate-700">Sangat Paham & Seru!</span>
+              </button>
+              <button onclick="selectReflection(2)" id="btn-ref-2" class="bg-white hover:bg-sky-50 border-2 border-slate-200 hover:border-sky-400 rounded-2xl p-5 flex flex-col items-center gap-2 transition-all">
+                <span class="text-4xl">🙂</span>
+                <span class="font-bold text-xs text-slate-700">Paham Dengan Baik</span>
+              </button>
+              <button onclick="selectReflection(3)" id="btn-ref-3" class="bg-white hover:bg-amber-50 border-2 border-slate-200 hover:border-amber-400 rounded-2xl p-5 flex flex-col items-center gap-2 transition-all">
+                <span class="text-4xl">🤔</span>
+                <span class="font-bold text-xs text-slate-700">Butuh Sedikit Latihan</span>
+              </button>
+            </div>
+            <p id="reflection-response" class="text-xs text-slate-500 italic text-center min-h-[20px]"></p>
+          </div>
+        `
+      },
+      // 30. KESIMPULAN
+      {
+        title: "Misi Belajar Selesai: Kamu Adalah Juara!",
+        subtitle: "Selamat, Kamu Lulus!",
+        category: "KESIMPULAN",
+        html: `
+          <div class="text-center flex flex-col items-center gap-4 py-4">
+            <span class="text-6xl animate-pulse">🎓🏆🎨</span>
+            <h2 class="text-2xl font-black text-indigo-600">Selamat! Petualangan Selesai</h2>
+            <p class="text-xs text-slate-500 max-w-md leading-relaxed">
+              Kamu telah menyelesaikan 30 slide materi Luas dengan luar biasa! Kamu sudah bisa menghitung luas ubin atlet, lapangan futsal, kertas gambar, dan menguasai konsep sentimeter persegi ($L = \\text{cm}^2$).
+            </p>
+            <div class="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 w-full max-w-sm mt-2 text-left">
+              <span class="font-bold text-indigo-800 text-xs block mb-1">📋 Rekap Prestasimu:</span>
+              <div class="flex justify-between text-xs text-slate-600">
+                <span>Nilai Pemahaman:</span>
+                <span class="font-bold text-indigo-600" id="final-stats">10/10 Soal Terjawab</span>
+              </div>
+            </div>
+            <button onclick="restartSlides()" class="mt-2 bg-indigo-500 hover:bg-indigo-600 text-white font-extrabold px-6 py-3 rounded-xl shadow-md transition-all text-xs">
+              🔄 Mulai Ulang Slide
+            </button>
+          </div>
+        `
+      }
+    ];
+
+    // INTI SLIDE ENGINE RENDERING
+    function renderCurrentSlide() {
+      const q = slidesData[currentSlide];
+      
+      // Update Slide Meta teks
+      document.getElementById("slide-num-text").textContent = `Slide ${currentSlide + 1} dari ${totalSlides}`;
+      document.getElementById("slide-progress-bar").style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+      
+      // Update drop-down select
+      document.getElementById("slide-selector").value = currentSlide;
+
+      const viewport = document.getElementById("slide-viewport");
+      viewport.innerHTML = "";
+
+      // Render Title & Category Badge
+      const headerDiv = document.createElement("div");
+      headerDiv.className = "flex justify-between items-start gap-4 mb-4 border-b border-slate-100 pb-3";
+      headerDiv.innerHTML = `
+        <div>
+          <span class="bg-indigo-100 text-indigo-800 text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full mb-1 inline-block">${q.category}</span>
+          <h2 class="text-xl md:text-2xl font-black text-slate-800 leading-tight">${q.title}</h2>
+          <p class="text-xs text-slate-400 font-semibold">${q.subtitle}</p>
+        </div>
+      `;
+      viewport.appendChild(headerDiv);
+
+      // Render Content Area
+      if (q.quiz) {
+        // Render Soal Latihan Interaktif
+        const quizDiv = document.createElement("div");
+        quizDiv.className = "flex flex-col gap-4 py-2";
+        
+        const isAnswered = quizAnswers[currentSlide] !== undefined;
+        const selectedIdx = quizAnswers[currentSlide];
+
+        quizDiv.innerHTML = `
+          <p class="text-sm font-extrabold text-slate-800 leading-relaxed">${q.quiz.question}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2" id="quiz-options-container"></div>
+          <div id="quiz-feedback-box" class="hidden rounded-xl p-3.5 mt-3 text-xs flex items-start gap-3 transition-all duration-300"></div>
+        `;
+        viewport.appendChild(quizDiv);
+
+        const optionsContainer = quizDiv.querySelector("#quiz-options-container");
+        q.quiz.options.forEach((opt, idx) => {
+          const btn = document.createElement("button");
+          btn.className = `p-4 rounded-xl text-left text-xs font-bold transition-all duration-200 border-2 flex items-center justify-between `;
+          
+          if (!isAnswered) {
+            btn.className += " bg-white border-slate-100 hover:border-indigo-400 hover:bg-indigo-50/50 text-slate-700 shadow-sm";
+            btn.onclick = () => selectQuizAnswer(idx);
+          } else {
+            if (idx === q.quiz.correct) {
+              btn.className += " bg-emerald-50 border-emerald-400 text-emerald-800 shadow";
+            } else if (idx === selectedIdx) {
+              btn.className += " bg-rose-50 border-rose-300 text-rose-800";
+            } else {
+              btn.className += " bg-slate-50 border-slate-100 text-slate-400 opacity-60 cursor-not-allowed";
+            }
+          }
+
+          btn.innerHTML = `<span>${opt}</span>`;
+          optionsContainer.appendChild(btn);
+        });
+
+        if (isAnswered) {
+          showQuizFeedback(selectedIdx === q.quiz.correct);
+        }
+
+      } else {
+        // Render Slide HTML Biasa
+        const bodyDiv = document.createElement("div");
+        bodyDiv.innerHTML = q.html;
+        viewport.appendChild(bodyDiv);
+
+        // Jika slide laboratorium interaktif, panggil inisialisasi lab
+        if (currentSlide === 16) {
+          initLabExperiment();
+        }
+      }
+
+      // Atur tombol kembali/lanjut
+      document.getElementById("btn-prev").disabled = currentSlide === 0;
+      if (currentSlide === totalSlides - 1) {
+        document.getElementById("btn-next").textContent = "Selesai 🏆";
+        // Hitung skor kuis akhir
+        let correctCount = 0;
+        let totalQuiz = 0;
+        slidesData.forEach((s, idx) => {
+          if (s.quiz) {
+            totalQuiz++;
+            if (quizAnswers[idx] === s.quiz.correct) {
+              correctCount++;
+            }
+          }
+        });
+        const finalStats = document.getElementById("final-stats");
+        if (finalStats) {
+          finalStats.textContent = `${correctCount} dari ${totalQuiz} Soal Benar`;
+        }
+      } else {
+        document.getElementById("btn-next").textContent = "Lanjut ➡️";
+      }
+
+      // Render Ulang MathJax agar formula LaTeX tampak mulus
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    // INTERACTIVE QUIZ FUNCTIONS
+    function selectQuizAnswer(index) {
+      if (quizAnswers[currentSlide] !== undefined) return;
+      quizAnswers[currentSlide] = index;
+      
+      const q = slidesData[currentSlide];
+      const isCorrect = index === q.quiz.correct;
+
+      if (isCorrect) {
+        playSoundEffect('success');
+      } else {
+        playSoundEffect('fail');
+      }
+
+      renderCurrentSlide();
+    }
+
+    // Fungsi menampilkan feedback instan pasca klik opsi kuis
+    function showQuizFeedback(isCorrect) {
+      const q = slidesData[currentSlide];
+      const feedbackBox = document.getElementById("quiz-feedback-box");
+      if (!feedbackBox) return;
+
+      feedbackBox.classList.remove("hidden");
+      if (isCorrect) {
+        feedbackBox.className = "rounded-xl p-3.5 mt-3 text-xs flex items-start gap-3 transition-all duration-300 bg-emerald-100 border border-emerald-200 text-emerald-900";
+        feedbackBox.innerHTML = `
+          <span class="text-2xl">🌟</span>
+          <div>
+            <h4 class="font-extrabold text-sm text-emerald-800">Hebat, Jawabanmu Benar!</h4>
+            <p class="mt-0.5">${q.quiz.rationale}</p>
+          </div>
+        `;
+      } else {
+        feedbackBox.className = "rounded-xl p-3.5 mt-3 text-xs flex items-start gap-3 transition-all duration-300 bg-rose-100 border border-rose-200 text-rose-950";
+        feedbackBox.innerHTML = `
+          <span class="text-2xl">💡</span>
+          <div>
+            <h4 class="font-extrabold text-sm text-rose-800">Mari Kita Pelajari Lagi:</h4>
+            <p class="mt-0.5">${q.quiz.rationale}</p>
+          </div>
+        `;
+      }
+      
+      if (window.MathJax) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    // LAB EKSPERIMEN INTERAKTIF (SLIDE 17)
+    let labP = 4;
+    let labL = 3;
+
+    function initLabExperiment() {
+      updateLabExperiment('p', labP);
+    }
+
+    function updateLabExperiment(type, value) {
+      if (type === 'p') {
+        labP = parseInt(value);
+        const pLabel = document.getElementById("val-lab-p");
+        if (pLabel) pLabel.innerText = labP;
+      } else if (type === 'l') {
+        labL = parseInt(value);
+        const lLabel = document.getElementById("val-lab-l");
+        if (lLabel) lLabel.innerText = labL;
+      }
+
+      // Update Teks Rumus MathJax
+      const resultBox = document.getElementById("val-lab-result");
+      if (resultBox) {
+        resultBox.innerHTML = `$$${labP} \\times ${labL} = ${labP * labL}\\text{ Kotak}$$`;
+        if (window.MathJax) {
+          MathJax.typesetPromise([resultBox]);
+        }
+      }
+
+      // Render Grid Kotak
+      const gridContainer = document.getElementById("sandbox-grid");
+      if (gridContainer) {
+        gridContainer.style.gridTemplateColumns = `repeat(${labP}, minmax(0, 1fr))`;
+        gridContainer.innerHTML = "";
+        
+        for (let i = 0; i < labP * labL; i++) {
+          const cell = document.createElement("div");
+          cell.className = "w-6 h-6 sm:w-8 sm:h-8 bg-indigo-400 hover:bg-indigo-500 rounded border border-white text-[9px] text-white flex items-center justify-center font-bold transition-all";
+          cell.innerText = i + 1;
+          gridContainer.appendChild(cell);
+        }
+      }
+    }
+
+    // REFLEKSI EMOSI BELAJAR (SLIDE 29)
+    function selectReflection(type) {
+      const resp = document.getElementById("reflection-response");
+      
+      // Reset style tombol refleksi
+      document.getElementById("btn-ref-1").className = "bg-white border-2 border-slate-200 rounded-2xl p-5 flex flex-col items-center gap-2 transition-all";
+      document.getElementById("btn-ref-2").className = "bg-white border-2 border-slate-200 rounded-2xl p-5 flex flex-col items-center gap-2 transition-all";
+      document.getElementById("btn-ref-3").className = "bg-white border-2 border-slate-200 rounded-2xl p-5 flex flex-col items-center gap-2 transition-all";
+
+      if (type === 1) {
+        document.getElementById("btn-ref-1").className = "bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-5 flex flex-col items-center gap-2 transition-all ring-4 ring-emerald-100";
+        resp.innerText = "Luar biasa! Kamu adalah pembelajar cepat sejati. Bagikan kebahagiaan belajarmu hari ini!";
+        playSoundEffect('success');
+      } else if (type === 2) {
+        document.getElementById("btn-ref-2").className = "bg-sky-50 border-2 border-sky-400 rounded-2xl p-5 flex flex-col items-center gap-2 transition-all ring-4 ring-sky-100";
+        resp.innerText = "Keren sekali! Pemahamanmu sangat kuat. Kamu siap melahap tantangan matematika berikutnya!";
+        playSoundEffect('success');
+      } else if (type === 3) {
+        document.getElementById("btn-ref-3").className = "bg-amber-50 border-2 border-amber-400 rounded-2xl p-5 flex flex-col items-center gap-2 transition-all ring-4 ring-amber-100";
+        resp.innerText = "Bagus sekali! Mencoba adalah kunci kesuksesan. Teruslah berlatih corat-coret di papan kanvas kanan!";
+        playSoundEffect('success');
+      }
+    }
+
+    // SELEKTOR NAVIGASI SLIDE
+    function initSlideJumpSelector() {
+      const select = document.getElementById("slide-selector");
+      select.innerHTML = "";
+      slidesData.forEach((slide, idx) => {
+        const opt = document.createElement("option");
+        opt.value = idx;
+        opt.text = `${idx + 1}. [${slide.category}] ${slide.title.substring(0, 22)}...`;
+        select.appendChild(opt);
+      });
+    }
+
+    function jumpToSlide(idx) {
+      currentSlide = parseInt(idx);
+      renderCurrentSlide();
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        currentSlide++;
+        renderCurrentSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        renderCurrentSlide();
+      }
+    }
+
+    function restartSlides() {
+      currentSlide = 0;
+      quizAnswers = {};
+      renderCurrentSlide();
+    }
+
+    // ------------------- PAPAN CORETAN CANVAS DIGITAL -------------------
+    let canvas, ctx;
+    let drawing = false;
+    let activeColor = '#10B981';
+
+    function initCanvas() {
+      canvas = document.getElementById("scratchpad");
+      ctx = canvas.getContext("2d");
+      
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+
+      // Mouse Events
+      canvas.addEventListener("mousedown", (e) => {
+        drawing = true;
+        draw(e);
+      });
+      canvas.addEventListener("mouseup", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+      canvas.addEventListener("mousemove", draw);
+
+      // Touch Events for Mobile & Tablet
+      canvas.addEventListener("touchstart", (e) => {
+        e.preventDefault();
+        drawing = true;
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        ctx.moveTo(touch.clientX - rect.left, touch.clientY - rect.top);
+      });
+      canvas.addEventListener("touchmove", (e) => {
+        e.preventDefault();
+        if (!drawing) return;
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        ctx.strokeStyle = activeColor;
+        ctx.lineWidth = 3;
+        ctx.lineCap = "round";
+        ctx.lineTo(touch.clientX - rect.left, touch.clientY - rect.top);
+        ctx.stroke();
+        playSoundEffect('draw');
+      });
+      canvas.addEventListener("touchend", () => {
+        drawing = false;
+        ctx.beginPath();
+      });
+    }
+
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      ctx.strokeStyle = activeColor;
+      ctx.lineWidth = 3;
+      ctx.lineCap = "round";
+    }
+
+    function draw(e) {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      ctx.strokeStyle = activeColor;
+      ctx.lineWidth = 3;
+      ctx.lineCap = "round";
+      ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+      playSoundEffect('draw');
+    }
+
+    function changePenColor(color) {
+      activeColor = color;
+    }
+
+    function clearScratchpad() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.beginPath();
+    }
+
+    // Inisialisasi Seluruh Aplikasi di Window Load
+    window.onload = function() {
+      initSlideJumpSelector();
+      renderCurrentSlide();
+      initCanvas();
+    };
+  </script>
+</body>
+</html>
