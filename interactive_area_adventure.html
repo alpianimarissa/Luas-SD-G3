@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Detektif Luas - Kelas 3 SD</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- MathJax Configuration for Perfect Non-Formula Rendering -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FFFDF9;
+        }
+        .heading-font {
+            font-family: 'Fredoka', sans-serif;
+        }
+        .math-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .slide-transition {
+            transition: all 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-[#FFFBEB] via-[#F0FDF4] to-[#EFF6FF] min-h-screen flex flex-col justify-between overflow-x-hidden select-none">
+
+    <!-- TOP HEADER -->
+    <header class="bg-white/95 backdrop-blur-md border-b-4 border-[#FFB300] py-3 px-6 flex justify-between items-center sticky top-0 z-40 shadow-sm">
+        <div class="flex items-center gap-3">
+            <svg class="w-10 h-10 text-[#FF8C00] animate-bounce" viewBox="0 0 100 100" fill="none">
+                <circle cx="50" cy="50" r="42" fill="#FFF2CC" stroke="#FFB300" stroke-width="4"/>
+                <rect x="35" y="35" w="30" h="30" fill="#EF5350" stroke="#B71C1C" stroke-width="2" rx="3"/>
+                <text x="44" y="55" fill="white" font-family="'Fredoka'" font-weight="bold" font-size="16">L</text>
+            </svg>
+            <div>
+                <h1 class="heading-font text-xl md:text-2xl font-bold text-[#D84315]">Detektif Luas</h1>
+                <p class="text-[10px] text-[#0288D1] font-black tracking-widest uppercase">Kurikulum Merdeka • Kelas 3 SD Tantangan Cepat</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-3">
+            <!-- XP Badge -->
+            <div class="bg-[#FFF4E0] border-2 border-[#FFAA00] rounded-full px-4 py-1.5 flex items-center gap-1.5 shadow-sm">
+                <span class="text-base">🏆</span>
+                <span id="score-display" class="font-bold text-[#9E6200] text-xs md:text-sm">0 XP</span>
+            </div>
+            
+            <!-- Scratchpad Toggle -->
+            <button id="scratchpad-btn" onclick="toggleScratchpad()" class="bg-[#E0F7FA] hover:bg-[#B2EBF2] border-2 border-[#00ACC1] active:scale-95 transition text-[#00838F] font-black rounded-full px-4 py-1.5 text-xs md:text-sm shadow-sm flex items-center gap-1">
+                ✏️ <span>Papan Cakar</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- SCRATCHPAD DRAWING OVERLAY -->
+    <div id="scratchpad" class="hidden fixed inset-0 z-50 bg-white/95 flex flex-col p-4">
+        <div class="flex justify-between items-center mb-2 border-b-2 border-gray-100 pb-2">
+            <h3 class="heading-font text-lg font-bold text-[#00838F] flex items-center gap-2">
+                ✏️ Papan Cakar Detektif Luas (Corat-coret Hitung)
+            </h3>
+            <div class="flex items-center gap-2">
+                <button onclick="clearCanvas()" class="bg-red-50 hover:bg-red-100 text-red-600 font-bold px-3 py-1.5 rounded-xl text-xs">Bersihkan</button>
+                <button onclick="toggleScratchpad()" class="bg-[#00838F] hover:bg-[#006064] text-white font-bold px-4 py-1.5 rounded-xl text-xs">Kembali ke Misi</button>
+            </div>
+        </div>
+        <div class="flex-1 bg-amber-50/20 border-4 border-dashed border-[#00ACC1] rounded-2xl relative cursor-crosshair overflow-hidden">
+            <canvas id="scratch-canvas" class="absolute inset-0 w-full h-full"></canvas>
+        </div>
+        <p class="text-xs text-gray-400 mt-2 text-center">Gunakan jari atau mouse untuk mencakar pembagian atau menggambar persegi pembantu!</p>
+    </div>
+
+    <!-- MAIN SLIDE WINDOW -->
+    <main class="flex-1 flex items-center justify-center p-4 relative my-4">
+        <!-- Prev Arrow -->
+        <button id="prev-btn" onclick="changeSlide(-1)" class="absolute left-2 md:left-6 z-30 bg-white hover:bg-[#FFF4E0] text-[#FF8C00] border-4 border-[#FFE082] w-12 h-12 rounded-full flex items-center justify-center text-lg shadow-md active:scale-90 transition">
+            ◀
+        </button>
+
+        <!-- Slide Body wrapper -->
+        <div id="slide-wrapper" class="w-full max-w-4xl bg-white rounded-3xl border-8 border-[#FFE082] shadow-xl overflow-hidden flex flex-col justify-between min-h-[520px] md:min-h-[580px] slide-transition">
+            <!-- Top Progress Bar -->
+            <div class="w-full bg-[#FFF9E6] h-3">
+                <div id="progress-bar" class="bg-[#FF8C00] h-full transition-all duration-300" style="width: 3.3%"></div>
+            </div>
+
+            <!-- Dynamic Content Area -->
+            <div id="slide-content" class="p-6 md:p-10 flex-1 flex flex-col justify-center overflow-y-auto max-h-[460px] md:max-h-[510px]">
+                <!-- Loaded dynamically by Javascript -->
+            </div>
+
+            <!-- Footer Status Badge -->
+            <div class="bg-[#FFFDF5] border-t-2 border-[#FFF2CC] px-6 py-3 flex justify-between items-center text-xs md:text-sm font-bold text-[#FF8C00]">
+                <span id="section-name">Misi Pembuka</span>
+                <span id="slide-index" class="bg-[#FF8C00] text-white px-3 py-1 rounded-full">Slide 1 / 30</span>
+            </div>
+        </div>
+
+        <!-- Next Arrow -->
+        <button id="next-btn" onclick="changeSlide(1)" class="absolute right-2 md:right-6 z-30 bg-white hover:bg-[#FFF4E0] text-[#FF8C00] border-4 border-[#FFE082] w-12 h-12 rounded-full flex items-center justify-center text-lg shadow-md active:scale-90 transition">
+            ▶
+        </button>
+    </main>
+
+    <!-- FLOATING TOAST NOTIFICATION -->
+    <div id="toast" class="hidden fixed bottom-12 left-1/2 transform -translate-x-1/2 z-50 bg-[#10B981] text-white font-bold px-6 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce">
+        <span id="toast-icon">✨</span> <span id="toast-text">Luar biasa! Penyelesaianmu tepat!</span>
+    </div>
+
+    <!-- CONFETTI CELEBRATION CANVAS -->
+    <canvas id="confetti" class="fixed inset-0 pointer-events-none z-50 w-full h-full hidden"></canvas>
+
+    <!-- INLINE JAVASCRIPT & DATABASE SLIDES -->
+    <script>
+        // --- 1. WEB AUDIO API SYNTHESIZER ---
+        let audioCtx;
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playSound(type) {
+            try {
+                const ctx = getAudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); 
+                    osc.frequency.setValueAtTime(659.25, ctx.currentTime + 0.08); 
+                    osc.frequency.setValueAtTime(783.99, ctx.currentTime + 0.16); 
+                    osc.frequency.setValueAtTime(1046.50, ctx.currentTime + 0.24); 
+                    gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.45);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.45);
+                } else if (type === 'incorrect') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(140, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(70, ctx.currentTime + 0.35);
+                    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.35);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.35);
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(380, ctx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(280, ctx.currentTime + 0.08);
+                    gain.gain.setValueAtTime(0.04, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
+                    osc.start(ctx.currentTime);
+                    osc.stop(ctx.currentTime + 0.08);
+                }
+            } catch (e) {
+                console.log("Audio requires user interaction first.");
+            }
+        }
+
+        // --- 2. THE 30 ADVENTURE SLIDES DATABASE ---
+        const slides = [
+            // Slide 1: Cover
+            {
+                section: "Tuning In",
+                title: "Misi Rahasia Detektif Luas!",
+                subtitle: "Menemukan Sisi Hilang & Menghitung Bentuk Abstrak Kreatif • Kelas 3 SD",
+                icon: "🎮",
+                render: () => `
+                    <div class="text-center">
+                        <div class="flex justify-center mb-4">
+                            <!-- SVG Grid with Missing Piece and Ball -->
+                            <svg class="w-32 h-32 text-[#FF8C00] animate-bounce" viewBox="0 0 100 100" fill="none">
+                                <rect x="10" y="10" w="80" h="80" fill="#E8F5E9" stroke="#10B981" stroke-width="3"/>
+                                <line x1="36.6" y1="10" x2="36.6" y2="90" stroke="#A7F3D0" stroke-width="1.5"/>
+                                <line x1="63.3" y1="10" x2="63.3" y2="90" stroke="#A7F3D0" stroke-width="1.5"/>
+                                <line x1="10" y1="36.6" x2="90" y2="36.6" stroke="#A7F3D0" stroke-width="1.5"/>
+                                <line x1="10" y1="63.3" x2="90" y2="63.3" stroke="#A7F3D0" stroke-width="1.5"/>
+                                <!-- Ball inside grid -->
+                                <circle cx="50" cy="50" r="12" fill="#FFFFFF" stroke="#374151" stroke-width="2"/>
+                                <path d="M 42 42 L 58 58 M 58 42 L 42 58" stroke="#374151" stroke-width="1.5"/>
+                                <text x="14" y="24" fill="#10B981" font-family="'Fredoka'" font-size="10" font-weight="bold">9 Kotak</text>
+                            </svg>
+                        </div>
+                        <h2 class="heading-font text-3xl md:text-5xl font-extrabold text-[#D84315] mb-2">Misi Detektif Luas</h2>
+                        <p class="text-base md:text-lg text-amber-700 font-bold mb-6">Membongkar Sisi Rahasia & Menghitung Luas Grid Kreatif</p>
+                        <div class="inline-block bg-[#FFF9E6] border-2 border-dashed border-[#FFE082] rounded-2xl p-4 max-w-lg mx-auto">
+                            <p class="text-xs md:text-sm text-amber-900 font-semibold">"Halo Detektif Cerdas! Hari ini kita akan belajar cara cepat menemukan sisi tersembunyi dan menghitung luas gambar unik buatanmu!"</p>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 2: Target & CP
+            {
+                section: "Tuning In",
+                title: "Misi Detektif Hari Ini",
+                subtitle: "Tujuan Pembelajaran Kurikulum Merdeka",
+                icon: "🎯",
+                render: () => `
+                    <div class="max-w-2xl mx-auto text-left">
+                        <p class="text-sm text-gray-500 font-bold mb-4">Selesaikan misi ini untuk menguasai kemampuan hebat:</p>
+                        <ul class="space-y-3 text-xs md:text-sm">
+                            <li class="bg-amber-50 border-l-8 border-[#FF8C00] p-3 rounded-r-xl font-bold text-amber-950 flex items-center gap-3">
+                                <span class="text-lg"> Skate </span> Membalik rumus luas untuk menemukan panjang sisi yang hilang pada persegi & persegi panjang.
+                            </li>
+                            <li class="bg-[#EFF6FF] border-l-8 border-[#3B82F6] p-3 rounded-r-xl font-bold text-blue-950 flex items-center gap-3">
+                                <span class="text-lg"> Paint </span> Menghitung luas bentuk abstrak menggunakan grid (kotak-kotak) secara taktis.
+                            </li>
+                            <li class="bg-[#F0FDF4] border-l-8 border-[#10B981] p-3 rounded-r-xl font-bold text-emerald-950 flex items-center gap-3">
+                                <span class="text-lg"> Triangle </span> Menggabungkan pecahan bidang (2 segitiga setengah kotak) menjadi 1 kotak utuh dengan cepat.
+                            </li>
+                        </ul>
+                    </div>
+                `
+            },
+            // Slide 3: Peta Petualangan
+            {
+                section: "Pembuka",
+                title: "Rute Petualangan Kita",
+                subtitle: "Alur misi seru yang harus ditaklukkan",
+                icon: "🗺️",
+                render: () => `
+                    <div class="w-full">
+                        <p class="text-sm text-center text-gray-500 font-bold mb-6">4 Pos Penting yang Akan Kita Jelajahi:</p>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div class="bg-amber-50 p-4 rounded-2xl border-2 border-amber-200 text-center">
+                                <span class="text-3xl">⚽</span>
+                                <h4 class="font-bold text-amber-800 text-xs mt-2">1. Warm-Up Lapangan</h4>
+                            </div>
+                            <div class="bg-blue-50 p-4 rounded-2xl border-2 border-blue-200 text-center">
+                                <span class="text-3xl">📐</span>
+                                <h4 class="font-bold text-blue-800 text-xs mt-2">2. Sisi yang Hilang</h4>
+                            </div>
+                            <div class="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200 text-center">
+                                <span class="text-3xl">🧩</span>
+                                <h4 class="font-bold text-emerald-800 text-xs mt-2">3. Bentuk Abstrak</h4>
+                            </div>
+                            <div class="bg-pink-50 p-4 rounded-2xl border-2 border-pink-200 text-center">
+                                <span class="text-3xl">🏆</span>
+                                <h4 class="font-bold text-pink-800 text-xs mt-2">4. Tantangan Mandiri</h4>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 4: Warm-Up 1
+            {
+                section: "Warm-Up",
+                title: "Tebak Luas Lapangan Bola Grid",
+                subtitle: "Menghitung luas dengan kotak satuan cepat",
+                icon: "⚽",
+                render: () => `
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                        <div class="flex justify-center bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-300">
+                            <!-- Beautiful & crystal clear 3x3 Grid of colored squares -->
+                            <svg class="w-48 h-48" viewBox="0 0 100 100">
+                                <!-- Row 1 -->
+                                <rect x="8" y="12" width="25" height="25" fill="#A5D6A7" stroke="#1B5E20" stroke-width="1.5" rx="3"/>
+                                <rect x="37" y="12" width="25" height="25" fill="#A5D6A7" stroke="#1B5E20" stroke-width="1.5" rx="3"/>
+                                <rect x="66" y="12" width="25" height="25" fill="#A5D6A7" stroke="#1B5E20" stroke-width="1.5" rx="3"/>
+                                <!-- Row 2 -->
+                                <rect x="8" y="41" width="25" height="25" fill="#A5D6A7" stroke="#1B5E20" stroke-width="1.5" rx="3"/>
+                                <rect x="37" y="41" width="25" height="25" fill="#A5D6A7" stroke="#1B5E20" stroke-width="1.5" rx="3"/>
+                                <rect x="66" y="41" width="25" height="25" fill="#A5D6A7" stroke="#1B5E20" stroke-width="1.5" rx="3"/>
+                                <!-- Row 3 -->
+                                <rect x="8" y="70" width="25" height="25" fill="#A5D6A7" stroke="#1B5E20" stroke-width="1.5" rx="3"/>
+                                <rect x="37" y="70" width="25" height="25" fill="#A5D6A7" stroke="#1B5E20" stroke-width="1.5" rx="3"/>
+                                <rect x="66" y="70" width="25" height="25" fill="#A5D6A7" stroke="#1B5E20" stroke-width="1.5" rx="3"/>
+                                <!-- Tactical center circle -->
+                                <circle cx="49.5" cy="53.5" r="8" fill="none" stroke="white" stroke-width="1.5"/>
+                                <!-- Row indicators -->
+                                <text x="1" y="27" fill="#1B5E20" font-family="'Fredoka'" font-size="5" font-weight="bold">B1</text>
+                                <text x="1" y="56" fill="#1B5E20" font-family="'Fredoka'" font-size="5" font-weight="bold">B2</text>
+                                <text x="1" y="85" fill="#1B5E20" font-family="'Fredoka'" font-size="5" font-weight="bold">B3</text>
+                                <!-- Col indicators -->
+                                <text x="17" y="8" fill="#1B5E20" font-family="'Fredoka'" font-size="5" font-weight="bold">K1</text>
+                                <text x="46" y="8" fill="#1B5E20" font-family="'Fredoka'" font-size="5" font-weight="bold">K2</text>
+                                <text x="75" y="8" fill="#1B5E20" font-family="'Fredoka'" font-size="5" font-weight="bold">K3</text>
+                            </svg>
+                        </div>
+                        <div class="space-y-3">
+                            <p class="text-sm text-gray-600 font-semibold leading-relaxed">
+                                Lapangan bola mini digambar di atas kertas berpetak. Terdiri dari <strong>3 baris</strong> dan <strong>3 kolom</strong> kotak satuan. Berapa luas totalnya?
+                            </p>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="checkSlideAnswer(this, false, 'Coba kalikan baris dikali kolom: 3 x 3.', 5)" class="bg-[#F3F4F6] hover:bg-gray-100 p-2.5 rounded-xl border text-xs font-bold">6 Kotak</button>
+                                <button onclick="checkSlideAnswer(this, true, 'Hebat! Luas lapangan adalah 3 x 3 = 9 kotak satuan.', 5)" class="bg-[#F3F4F6] hover:bg-gray-100 p-2.5 rounded-xl border text-xs font-bold">9 Kotak</button>
+                                <button onclick="checkSlideAnswer(this, false, 'Kelebihan menghitung.', 5)" class="bg-[#F3F4F6] hover:bg-gray-100 p-2.5 rounded-xl border text-xs font-bold">12 Kotak</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 5: Warm-Up 2
+            {
+                section: "Warm-Up",
+                title: "Melompat di Atas Matras Senam",
+                subtitle: "Review konsep Luas = Sisi x Sisi",
+                icon: "🤸",
+                render: () => `
+                    <div class="text-center">
+                        <p class="text-sm font-bold text-gray-600 mb-4">Matras senam berbentuk persegi memiliki panjang sisi 4 meter. Berapa luas matras tersebut?</p>
+                        <div class="flex justify-center items-center gap-3 text-2xl md:text-3xl font-black mb-6">
+                            <span class="bg-amber-100 px-4 py-2 rounded-xl text-amber-700">$4\\text{ m}$</span>
+                            <span>$\\times$</span>
+                            <span class="bg-amber-100 px-4 py-2 rounded-xl text-amber-700">$4\\text{ m}$</span>
+                            <span>=</span>
+                            <span id="warmup2-ans" class="bg-emerald-100 text-emerald-700 px-6 py-2 rounded-xl animate-pulse">?</span>
+                        </div>
+                        <div class="flex justify-center gap-3">
+                            <button onclick="checkSlideAnswer(this, false, 'Ingat, 4 ditambah 4 adalah keliling, luas memakai perkalian!', 5)" class="bg-white hover:bg-amber-50 border-2 border-gray-200 px-6 py-2.5 rounded-xl font-bold text-xs">8 m²</button>
+                            <button onclick="checkSlideAnswer(this, true, 'Keren! Luas persegi = s x s = 4 x 4 = 16 m².', 5)" class="bg-white hover:bg-amber-50 border-2 border-gray-200 px-6 py-2.5 rounded-xl font-bold text-xs">16 m²</button>
+                            <button onclick="checkSlideAnswer(this, false, 'Masih belum tepat.', 5)" class="bg-white hover:bg-amber-50 border-2 border-gray-200 px-6 py-2.5 rounded-xl font-bold text-xs">20 m²</button>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 6: Warm-Up 3
+            {
+                section: "Warm-Up",
+                title: "Teka-teki Segitiga Penggabung",
+                subtitle: "Review awal penggabungan bentuk",
+                icon: "🔺",
+                render: () => `
+                    <div class="text-center">
+                        <p class="text-sm font-bold text-gray-600 mb-4">Jika kamu menggabungkan <strong>2 buah segitiga setengah kotak</strong> seperti gambar di bawah, menjadi berapa kotak utuhkah mereka?</p>
+                        <div class="flex justify-center mb-6">
+                            <!-- SVG 2 Half-squares triangles -->
+                            <svg class="w-32 h-20" viewBox="0 0 100 60">
+                                <rect x="10" y="10" w="30" h="30" fill="none" stroke="#94A3B8" stroke-dasharray="2 2"/>
+                                <polygon points="10,40 40,40 10,10" fill="#F87171" stroke="#EF4444" stroke-width="1.5"/>
+                                <rect x="60" y="10" w="30" h="30" fill="none" stroke="#94A3B8" stroke-dasharray="2 2"/>
+                                <polygon points="60,40 90,40 90,10" fill="#F87171" stroke="#EF4444" stroke-width="1.5"/>
+                                <text x="46" y="32" fill="#475569" font-size="14" font-weight="bold">+</text>
+                            </svg>
+                        </div>
+                        <div class="flex justify-center gap-3">
+                            <button onclick="checkSlideAnswer(this, true, 'Sangat Hebat! 2 buah setengah kotak bergabung menjadi 1 kotak utuh.', 5)" class="bg-white hover:bg-emerald-50 border-2 border-gray-300 px-6 py-2.5 rounded-xl font-bold text-xs">1 Kotak Utuh</button>
+                            <button onclick="checkSlideAnswer(this, false, 'Setengah ditambah setengah adalah satu.', 5)" class="bg-white hover:bg-emerald-50 border-2 border-gray-300 px-6 py-2.5 rounded-xl font-bold text-xs">2 Kotak</button>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 7: Real-world Connection 1
+            {
+                section: "Koneksi Nyata",
+                title: "Lapangan Karate vs Kolam Renang",
+                subtitle: "Membandingkan bentuk teratur & tidak teratur",
+                icon: "🥋",
+                render: () => `
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                        <div>
+                            <p class="text-sm text-gray-600 leading-relaxed font-semibold">
+                                Bayangkan kamu menggambar denah pusat olahraga (*Sport Center*). 
+                                <br><br>
+                                Kamu menggambar lapangan karate berbentuk <strong>persegi sempurna</strong>, dan sebuah kolam renang dengan <strong>bentuk meliuk-liuk (abstrak)</strong>.
+                                <br><br>
+                                Bagaimana kita bisa tahu mana yang membutuhkan ruang tanah lebih besar? Di sinilah detektif luas menggunakan rahasia grid kotak-kotak!
+                            </p>
+                        </div>
+                        <div class="bg-sky-50 p-4 rounded-2xl border-2 border-sky-100 text-center flex flex-col items-center">
+                            <span class="text-5xl block animate-bounce mb-2">🥋🏊</span>
+                            <div class="text-xs font-mono font-bold bg-white p-2 rounded border border-sky-300">
+                                Lapangan Karate vs Kolam Renang
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 8: Real-world Connection 2
+            {
+                section: "Koneksi Nyata",
+                title: "Mendesain Jersey Bola Kebanggaan",
+                subtitle: "Menghitung luas sablon nomor punggung",
+                icon: "👕",
+                render: () => `
+                    <div class="grid md:grid-cols-2 gap-6 items-center">
+                        <div class="order-2 md:order-1 flex justify-center bg-[#F0FDF4] p-4 rounded-2xl border-2 border-emerald-200">
+                            <!-- SVG Football Jersey -->
+                            <svg class="w-36 h-36" viewBox="0 0 100 100">
+                                <path d="M 30 10 L 40 5 L 50 12 L 60 5 L 70 10 L 85 25 L 75 35 L 70 30 L 70 90 L 30 90 L 30 30 L 25 35 L 15 25 Z" fill="#3B82F6" stroke="#1D4ED8" stroke-width="3"/>
+                                <rect x="42" y="35" w="16" h="25" fill="#F59E0B" stroke="#D97706" stroke-width="1.5"/>
+                                <text x="47" y="52" fill="white" font-size="14" font-weight="bold">10</text>
+                            </svg>
+                        </div>
+                        <div class="order-1 md:order-2">
+                            <p class="text-sm text-gray-600 leading-relaxed font-semibold">
+                                Saat mendesain jersey bola, penata gambar harus menghitung luas area sablon nomor punggung agar muat di bagian belakang baju.
+                                <br><br>
+                                Apabila luas area sablon sudah ditentukan, desainer harus membagi dengan tinggi untuk mendapatkan lebar nomor punggung yang proporsional!
+                            </p>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 9: Real-world Connection 3
+            {
+                section: "Koneksi Nyata",
+                title: "Membangun Kastil di Game Minecraft/Roblox",
+                subtitle: "Menghitung kebutuhan luas lahan piksel",
+                icon: "🎮",
+                render: () => `
+                    <div class="text-center max-w-xl mx-auto space-y-3">
+                        <p class="text-sm text-gray-600 font-semibold">
+                            Dalam game membangun dunia 3D seperti Minecraft, setiap blok yang diletakkan menempati area grid persegi tertentu.
+                            <br><br>
+                            Jika kamu ingin membuat pondasi menara kastil berbentuk persegi dengan luas 36 blok, berapa blok panjang sisi menara yang harus kamu batasi? Kita akan temukan caranya!
+                        </p>
+                        <div class="bg-amber-50 border border-amber-300 p-3 rounded-xl text-xs font-semibold text-amber-900 leading-relaxed inline-block">
+                            🧱 <strong>Detektif Luas membantu kita:</strong> membagi lahan, menyusun rancangan piksel, dan merakit kastil impian!
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 10: Review Rumus Luas
+            {
+                section: "Konsep Dasar",
+                title: "Mengulas Balik Rumus Luas",
+                subtitle: "Senjata dasar sebelum membalik persamaan",
+                icon: "📐",
+                render: () => `
+                    <div class="space-y-4 max-w-2xl mx-auto text-xs md:text-sm">
+                        <p class="text-gray-600 leading-relaxed">
+                            Mari kita ingat kembali rumus luas dua bangun datar terpenting:
+                        </p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-violet-50 border-2 border-violet-200 p-3.5 rounded-xl text-center">
+                                <strong class="text-violet-900 block mb-1">Luas Persegi</strong>
+                                <span class="font-mono text-[#6D28D9] font-bold">$L = s \\times s$</span>
+                            </div>
+                            <div class="bg-blue-50 border-2 border-blue-200 p-3.5 rounded-xl text-center">
+                                <strong class="text-blue-900 block mb-1">Luas Persegi Panjang</strong>
+                                <span class="font-mono text-blue-800 font-bold">$L = p \\times l$</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 text-center italic">"Sekarang, bagaimana jika LUAS-nya sudah diketahui, dan kita diminta mencari panjang sisinya?"</p>
+                    </div>
+                `
+            },
+            // Slide 11: Misi 1: Mencari Sisi Persegi dari Luas
+            {
+                section: "Mencari Sisi",
+                title: "Misi 1: Sisi dari Luas Persegi",
+                subtitle: "Teka-teki bilangan kembar misterius!",
+                icon: "🕵️‍♂️",
+                render: () => `
+                    <div class="space-y-3 text-xs md:text-sm max-w-xl mx-auto text-left">
+                        <p class="text-gray-600 font-semibold">Karena persegi memiliki semua sisi yang <strong>sama panjang</strong>, rumusnya adalah:</p>
+                        <div class="bg-amber-50 border-l-8 border-[#FF8C00] p-4 rounded-r-xl font-mono text-center text-sm font-bold">
+                            $s \\times s = L$
+                        </div>
+                        <p class="text-gray-600 mt-2">Maka untuk mencari sisi $s$, kita harus bertanya:</p>
+                        <p class="text-[#D84315] font-bold text-center italic">"Angka kembar berapakah yang jika dikalikan dengan dirinya sendiri menghasilkan Luas tersebut?"</p>
+                    </div>
+                `
+            },
+            // Slide 12: Cara Cepat Bilangan Kembar
+            {
+                section: "Mencari Sisi",
+                title: "Tabel Detektif Angka Kembar",
+                subtitle: "Kunci ingatan cepat untuk membalik luas persegi",
+                icon: "🔑",
+                render: () => `
+                    <div class="max-w-xl mx-auto text-xs md:text-sm">
+                        <p class="text-gray-600 mb-3 font-semibold text-center">Hafalkan pasangan angka kembar ajaib ini:</p>
+                        <div class="grid grid-cols-2 gap-3 font-mono bg-violet-50 p-4 rounded-xl border border-violet-200">
+                            <div>
+                                <p>• $2 \\times 2 = 4 \\rightarrow$ Sisi $= 2$</p>
+                                <p>• $3 \\times 3 = 9 \\rightarrow$ Sisi $= 3$</p>
+                                <p>• $4 \\times 4 = 16 \\rightarrow$ Sisi $= 4$</p>
+                                <p>• $5 \\times 5 = 25 \\rightarrow$ Sisi $= 5$</p>
+                            </div>
+                            <div>
+                                <p>• $6 \\times 6 = 36 \\rightarrow$ Sisi $= 6$</p>
+                                <p>• $7 \\times 7 = 49 \\rightarrow$ Sisi $= 7$</p>
+                                <p>• $8 \\times 8 = 64 \\rightarrow$ Sisi $= 8$</p>
+                                <p>• $9 \\times 9 = 81 \\rightarrow$ Sisi $= 9$</p>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-gray-500 mt-3 text-center italic">"Contoh: Jika Luas $= 49 \\text{ cm}^2$, maka panjang sisinya pastilah $7 \\text{ cm}$ karena $7 \\times 7 = 49$."</p>
+                    </div>
+                `
+            },
+            // Slide 13: Misi 2: Mencari Sisi Persegi Panjang dari Luas
+            {
+                section: "Mencari Sisi",
+                title: "Misi 2: Sisi dari Persegi Panjang",
+                subtitle: "Menggunakan pembagian untuk membagi Luas",
+                icon: "🕵️‍♀️",
+                render: () => `
+                    <div class="space-y-3 text-xs md:text-sm max-w-xl mx-auto text-left">
+                        <p class="text-gray-600 font-semibold">Pada persegi panjang, jika Luas ($L$) dan salah satu sisinya sudah diketahui, kita tinggal memakai pembagian:</p>
+                        <div class="grid grid-cols-2 gap-3 mt-2">
+                            <div class="bg-blue-50 border-l-4 border-blue-500 p-3 rounded-r-xl">
+                                <strong class="text-blue-950 block text-xs">Mencari Panjang ($p$)</strong>
+                                $p = L \\div l$
+                            </div>
+                            <div class="bg-emerald-50 border-l-4 border-emerald-500 p-3 rounded-r-xl">
+                                <strong class="text-emerald-950 block text-xs">Mencari Lebar ($l$)</strong>
+                                $l = L \\div p$
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 italic mt-3 text-center">"Pembagian adalah kebalikan dari operasi perkalian!"</p>
+                    </div>
+                `
+            },
+            // Slide 14: Cara Cepat Pembagian Persegi Panjang
+            {
+                section: "Mencari Sisi",
+                title: "Contoh Detektif Pembagian",
+                subtitle: "Langkah mudah memecah luas persegi panjang",
+                icon: "📊",
+                render: () => `
+                    <div class="space-y-2.5 text-xs md:text-sm max-w-xl mx-auto">
+                        <div class="bg-[#FFFDF5] p-3 rounded-lg border border-amber-300">
+                            <strong class="text-amber-800">Kasus:</strong> Lapangan futsal mini memiliki <strong>Luas = 40 m²</strong> dan <strong>panjang = 8 m</strong>. Berapa lebarnya?
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100 font-mono">
+                            <p>Lebar ($l$) = Luas ($L$) $\\div$ Panjang ($p$)</p>
+                            <p>$l = 40 \\div 8$</p>
+                            <p>$l = 5 \\text{ meter}$ ✓</p>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 15: Misi 3: Mengenal Luas Kotak Abstrak / Tidak Beraturan
+            {
+                section: "Bentuk Abstrak",
+                title: "Misi 3: Menghitung Luas Bentuk Abstrak",
+                subtitle: "Tidak semua bentuk di dunia berbentuk kotak rapi!",
+                icon: "🧩",
+                render: () => `
+                    <div class="grid md:grid-cols-2 gap-4 items-center">
+                        <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 flex justify-center">
+                            <!-- Geometric composite shape SVG -->
+                            <svg class="w-44 h-36" viewBox="0 0 100 80">
+                                <rect x="10" y="10" w="80" h="60" fill="none" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="2 2"/>
+                                <!-- Composite shape: 4 full squares + 2 triangles -->
+                                <rect x="30" y="30" w="40" h="20" fill="#93C5FD" stroke="#2563EB" stroke-width="2"/>
+                                <polygon points="30,30 30,50 10,50" fill="#FCA5A5" stroke="#EF4444" stroke-width="2"/>
+                                <polygon points="70,30 70,50 90,50" fill="#FCA5A5" stroke="#EF4444" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div class="space-y-2 text-xs md:text-sm">
+                            <h4 class="font-bold text-gray-700">Trik Detektif Bentuk Abstrak:</h4>
+                            <p class="text-gray-600">1. Hitung jumlah <strong>kotak utuh</strong> terlebih dahulu.</p>
+                            <p class="text-gray-600">2. Gabungkan potongan segitiga / <strong>setengah kotak</strong> menjadi satu kotak utuh.</p>
+                            <p class="text-gray-600">3. Jumlahkan semua kotak utuh tersebut!</p>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 16: Penggabungan Segitiga
+            {
+                section: "Bentuk Abstrak",
+                title: "Aturan Gabungan Segitiga",
+                subtitle: "Menyatukan potongan puzzle menjadi kotak utuh",
+                icon: "🔺",
+                render: () => `
+                    <div class="space-y-4 max-w-xl mx-auto text-xs md:text-sm text-center">
+                        <p class="text-gray-600 leading-relaxed text-left">
+                            Ketika kita menempelkan <strong>2 buah segitiga siku-siku berukuran sama (setengah kotak)</strong>, mereka akan bersatu membentuk <strong>1 kotak satuan utuh</strong>:
+                        </p>
+                        <div class="bg-emerald-50 border-2 border-emerald-300 p-4 rounded-xl font-mono font-bold text-emerald-800">
+                            🔺 + 🔺 = 🟩 (1 Kotak Utuh)
+                        </div>
+                        <p class="text-xs text-gray-500 italic mt-2">"Jika ada 4 kotak utuh dan 2 segitiga menempel, maka luasnya adalah 4 + 1 = 5 kotak satuan!"</p>
+                    </div>
+                `
+            },
+            // Slide 17: INTERACTIVE GRID BOX SHAPE VISUALIZER (RANDOMIZED/FIXED)
+            {
+                section: "Eksplorasi",
+                title: "Simulator Penggabung Segitiga",
+                subtitle: "Gabungkan potongan segitiga dan amati luas kotaknya",
+                icon: "🧩",
+                render: () => `
+                    <div class="grid md:grid-cols-2 gap-4 items-center">
+                        <div class="space-y-3 bg-gray-50 p-4 rounded-xl border">
+                            <p class="text-[10px] text-gray-500 font-bold">Geser slider untuk menambah potongan segitiga!</p>
+                            <div>
+                                <label class="text-xs font-bold text-gray-600 block">Jumlah Segitiga Setengah Kotak: <span id="val-tri" class="text-pink-600 font-extrabold">2</span></label>
+                                <input type="range" id="range-tri" min="0" max="6" step="2" value="2" oninput="updateComposite()" class="w-full accent-pink-500">
+                            </div>
+                            <div class="bg-white p-2.5 rounded border text-xs text-center font-mono mt-1 space-y-1">
+                                <span class="font-bold text-gray-700 block border-b pb-1">Kalkulator Detektif:</span>
+                                <span class="text-blue-600 font-bold">Kotak Utuh: </span><span class="font-bold">4 Kotak</span><br>
+                                <span class="text-pink-600 font-bold">Hasil Gabungan Segitiga: </span><span id="tri-result" class="font-bold">1 Kotak</span><br>
+                                <span class="text-emerald-600 font-bold">Total Luas: </span><span id="total-area-result" class="font-bold">5 Kotak Satuan</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center">
+                            <!-- SVG Grid Snapping Background & Beautiful shapes -->
+                            <svg id="interactive-shape-svg" class="w-44 h-44 bg-white border-2 border-slate-300 rounded-xl" viewBox="0 0 100 100">
+                                <!-- Grid Lines Background -->
+                                <line x1="10" y1="10" x2="10" y2="90" stroke="#E2E8F0" stroke-width="1"/>
+                                <line x1="26" y1="10" x2="26" y2="90" stroke="#E2E8F0" stroke-width="1"/>
+                                <line x1="42" y1="10" x2="42" y2="90" stroke="#E2E8F0" stroke-width="1"/>
+                                <line x1="58" y1="10" x2="58" y2="90" stroke="#E2E8F0" stroke-width="1"/>
+                                <line x1="74" y1="10" x2="74" y2="90" stroke="#E2E8F0" stroke-width="1"/>
+                                <line x1="90" y1="10" x2="90" y2="90" stroke="#E2E8F0" stroke-width="1"/>
+                                
+                                <line x1="10" y1="10" x2="90" y2="10" stroke="#E2E8F0" stroke-width="1"/>
+                                <line x1="10" y1="26" x2="90" y2="26" stroke="#E2E8F0" stroke-width="1"/>
+                                <line x1="10" y1="42" x2="90" y2="42" stroke="#E2E8F0" stroke-width="1"/>
+                                <line x1="10" y1="58" x2="90" y2="58" stroke="#E2E8F0" stroke-width="1"/>
+                                <line x1="10" y1="74" x2="90" y2="74" stroke="#E2E8F0" stroke-width="1"/>
+                                <line x1="10" y1="90" x2="90" y2="90" stroke="#E2E8F0" stroke-width="1"/>
+
+                                <!-- 4 Central Squares (Col 2 & 3, Row 2 & 3) -->
+                                <rect x="26" y="26" width="32" height="32" fill="#93C5FD" fill-opacity="0.6" stroke="#2563EB" stroke-width="2"/>
+                                <line x1="42" y1="26" x2="42" y2="58" stroke="#2563EB" stroke-width="1" stroke-dasharray="2 2"/>
+                                <line x1="26" y1="42" x2="58" y2="42" stroke="#2563EB" stroke-width="1" stroke-dasharray="2 2"/>
+
+                                <!-- Dynamic triangles group -->
+                                <g id="dynamic-triangles-group"></g>
+                            </svg>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 18: Trik Memecah Grid Segitiga
+            {
+                section: "Bentuk Abstrak",
+                title: "Trik Cepat Menghitung Grid Abstrak",
+                subtitle: "Menyusun strategi hitung cepat ujian",
+                icon: "💡",
+                render: () => `
+                    <div class="max-w-xl mx-auto text-xs md:text-sm text-left space-y-3">
+                        <p class="text-gray-600 font-semibold">Gunakan taktik detektif berikut saat menghadapi soal grid:</p>
+                        <div class="bg-violet-50 p-3 rounded-xl border border-violet-200">
+                            <strong>Taktik 1:</strong> Cari dan silang ($X$) setiap kotak yang benar-benar utuh terlebih dahulu agar tidak terhitung dua kali.
+                        </div>
+                        <div class="bg-sky-50 p-3 rounded-xl border border-sky-200">
+                            <strong>Taktik 2:</strong> Pasangkan setiap segitiga dengan segitiga pasangannya untuk membentuk persegi imajiner.
+                        </div>
+                    </div>
+                `
+            },
+            // --- SUB-MENCARI SISI (5 PERHITUNGAN & 5 CERITA) ---
+            // Slide 19: Latihan Sisi - Soal Perhitungan (1-2)
+            {
+                section: "Latihan Sisi",
+                title: "Kuis 1: Perhitungan Sisi Hilang",
+                subtitle: "Uji kecepatan membongkar panjang sisi",
+                icon: "✏️",
+                render: () => `
+                    <div class="space-y-4 max-w-xl mx-auto text-xs md:text-sm">
+                        <div class="bg-violet-50 p-3 rounded-xl border border-violet-100">
+                            <p class="font-bold text-violet-950">Soal 1: Sebuah persegi memiliki <strong>Luas = 25 cm²</strong>. Berapakah panjang sisinya?</p>
+                            <!-- SHUFFLED: B (5 cm) is correct, A (10 cm) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, false, 'Salah, hitung perkalian kembar yang menghasilkan 25.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">10 cm</button>
+                                <button onclick="checkSlideAnswer(this, true, 'Keren! Sisi persegi = s. Karena 5 x 5 = 25, maka sisinya adalah 5 cm.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">5 cm</button>
+                            </div>
+                        </div>
+                        <div class="bg-violet-50 p-3 rounded-xl border border-violet-100">
+                            <p class="font-bold text-violet-950">Soal 2: Persegi panjang memiliki <strong>Luas = 48 m²</strong> dan <strong>panjang = 8 m</strong>. Berapa lebarnya?</p>
+                            <!-- SHUFFLED: B (6 m) is correct, A (8 m) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, false, 'Penyebut KPK tidak sesuai.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">8 m</button>
+                                <button onclick="checkSlideAnswer(this, true, 'Sangat Hebat! Lebar = Luas : Panjang = 48 : 8 = 6 m.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">6 m</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 20: Sisa Soal Perhitungan Sisi (3-4)
+            {
+                section: "Latihan Sisi",
+                title: "Kuis 1: Sisa Perhitungan Sisi",
+                subtitle: "Menemukan sisi persegi panjang & ubin",
+                icon: "✏️",
+                render: () => `
+                    <div class="space-y-4 max-w-xl mx-auto text-xs md:text-sm">
+                        <div class="bg-blue-50 p-3 rounded-xl border border-blue-100">
+                            <p class="font-bold text-blue-950">Soal 3: Persegi panjang memiliki <strong>Luas = 72 cm²</strong> dan <strong>lebar = 8 cm</strong>. Berapakah panjangnya?</p>
+                            <!-- SHUFFLED: A (9 cm) is correct, B (12 cm) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, true, 'Tepat! Panjang = Luas : Lebar = 72 : 8 = 9 cm.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">9 cm</button>
+                                <button onclick="checkSlideAnswer(this, false, 'Bagi 72 dengan angka 8.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">12 cm</button>
+                            </div>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-xl border border-blue-100">
+                            <p class="font-bold text-blue-950">Soal 4 & 5: Ubin persegi di pojok kelas memiliki <strong>Luas = 64 cm²</strong>. Berapa sisinya?</p>
+                            <!-- SHUFFLED: B (8 cm) is correct, A (6 cm) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, false, 'Uji angka perkalian kembar yang menghasilkan 64.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">6 cm</button>
+                                <button onclick="checkSlideAnswer(this, true, 'Luar biasa! Karena 8 x 8 = 64, maka sisinya 8 cm.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">8 cm</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 21: Latihan Sisi - Soal Cerita (1-2)
+            {
+                section: "Latihan Sisi",
+                title: "Kuis 2: Cerita Sisi Tersembunyi (1-2)",
+                subtitle: "Tantangan cerita fiksi detektif kelas 3",
+                icon: "📖",
+                render: () => `
+                    <div class="space-y-4 max-w-xl mx-auto text-xs md:text-sm">
+                        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                            <p class="font-bold text-emerald-950">Kasus 1: Kanvas Lukisan Berharga</p>
+                            <p class="text-[11px] text-gray-600 mt-1">Kamu menggambar pada kanvas lukis persegi dengan <strong>Luas = 81 cm²</strong>. Berapakah ukuran panjang satu sisi kanvas lukismu?</p>
+                            <!-- SHUFFLED: B (9 cm) is correct, A (7 cm) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, false, 'Cari perkalian kembar yang menghasilkan 81.', 15)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">7 cm</button>
+                                <button onclick="checkSlideAnswer(this, true, 'Sempurna! 9 x 9 = 81. Maka panjang sisinya 9 cm.', 15)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">9 cm</button>
+                            </div>
+                        </div>
+                        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                            <p class="font-bold text-emerald-950">Kasus 2: Lapangan Futsal Mini</p>
+                            <p class="text-[11px] text-gray-600 mt-1">Lapangan futsal digambar dengan <strong>Luas = 50 m²</strong> dan <strong>lebar = 5 m</strong>. Berapa panjang lapangan futsal tersebut?</p>
+                            <!-- SHUFFLED: A (10 meter) is correct, B (15 meter) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, true, 'Hebat! Panjang = Luas : Lebar = 50 : 5 = 10 meter.', 15)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">10 meter</button>
+                                <button onclick="checkSlideAnswer(this, false, 'Bagi 50 dengan angka 5.', 15)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">15 meter</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 22: Sisa Soal Cerita Sisi (3-4)
+            {
+                section: "Latihan Sisi",
+                title: "Kuis 2: Cerita Sisi Tersembunyi (3-4)",
+                subtitle: "Membongkar rahasia luas wilayah",
+                icon: "📖",
+                render: () => `
+                    <div class="space-y-4 max-w-xl mx-auto text-xs md:text-sm">
+                        <div class="bg-[#FFFDF5] p-3 rounded-xl border border-amber-200">
+                            <p class="font-bold text-amber-950">Kasus 3 & 4: Blok Pondasi Kastil Game</p>
+                            <p class="text-[11px] text-gray-600 mt-1">Di game Minecraft, kamu merakit pondasi menara persegi dengan <strong>Luas = 36 blok</strong>.</p>
+                            <!-- SHUFFLED: B (6 blok) is correct, A (8 blok) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, false, 'Cari perkalian kembar yang menghasilkan 36.', 15)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">8 blok</button>
+                                <button onclick="checkSlideAnswer(this, true, 'Sangat Hebat! 6 x 6 = 36. Maka panjang sisinya 6 blok.', 15)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">6 blok</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 23: Soal Cerita Sisi 5 (HOTS)
+            {
+                section: "Latihan Sisi",
+                title: "Kuis 2: Kasus Cerita 5 (Tantangan Keliling)",
+                subtitle: "Menghubungkan luas ke pencarian keliling lapangan",
+                icon: "🏃",
+                render: () => `
+                    <div class="space-y-4 max-w-xl mx-auto text-xs md:text-sm">
+                        <div class="bg-red-50 p-3 rounded-xl border border-red-200">
+                            <p class="font-bold text-red-950">Kasus 5: Berlari Mengelilingi Lapangan</p>
+                            <p class="text-[11px] text-gray-600 mt-1">Sebuah lapangan futsal berbentuk persegi memiliki <strong>Luas = 100 m²</strong>. Jika kamu berlari mengelilingi lapangan tersebut sebanyak satu putaran penuh, berapa meter jarak yang kamu tempuh?</p>
+                        </div>
+                        <!-- SHUFFLED: B (40 meter) is correct, A (20 meter) is wrong -->
+                        <div class="flex justify-center gap-2">
+                            <button onclick="checkSlideAnswer(this, false, 'Cari sisinya dahulu (10 m), lalu cari keliling persegi (4 x sisi).', 10)" class="bg-white px-5 py-2.5 rounded-xl border font-bold text-xs">20 meter</button>
+                            <button onclick="checkSlideAnswer(this, true, 'SANGAT JENIUS! Sisi lapangan = 10 meter (karena 10x10=100). Keliling satu putaran penuh = 4 x sisi = 4 x 10 = 40 meter!', 20)" class="bg-white px-5 py-2.5 rounded-xl border font-bold text-xs">40 meter</button>
+                        </div>
+                    </div>
+                `
+            },
+            // --- SUB-BENTUK ABSTRAK (5 PERHITUNGAN & 5 CERITA) ---
+            // Slide 24: Latihan Bentuk Abstrak - Perhitungan (1-2)
+            {
+                section: "Latihan Abstrak",
+                title: "Kuis 3: Hitungan Luas Grid Abstrak",
+                subtitle: "Latih kepasihan menjumlahkan potongan grid",
+                icon: "✏️",
+                render: () => `
+                    <div class="space-y-4 max-w-xl mx-auto text-xs md:text-sm">
+                        <div class="bg-violet-50 p-3 rounded-xl border border-violet-100">
+                            <p class="font-bold text-violet-950">Soal 6: Logo Klub Bola digambar di atas grid: terdiri dari <strong>4 kotak utuh</strong> dan <strong>2 buah segitiga setengah</strong>. Berapa luas totalnya?</p>
+                            <!-- SHUFFLED: A (5 kotak) is correct, B (6 kotak) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, true, 'Tepat! 4 kotak + 1 kotak (dari 2 segitiga) = 5 kotak satuan.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">5 kotak satuan</button>
+                                <button onclick="checkSlideAnswer(this, false, 'Ingat, 2 segitiga digabung menjadi 1 kotak utuh.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">6 kotak satuan</button>
+                            </div>
+                        </div>
+                        <div class="bg-violet-50 p-3 rounded-xl border border-violet-100">
+                            <p class="font-bold text-violet-950">Soal 7: Gambar sayap pesawat mainan terdiri dari <strong>6 kotak utuh</strong> dan <strong>4 buah segitiga setengah</strong>. Berapa luasnya?</p>
+                            <!-- SHUFFLED: B (8 kotak) is correct, A (10 kotak) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, false, 'Bagi 4 segitiga dengan 2 untuk mendapat kotak utuh.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">10 kotak satuan</button>
+                                <button onclick="checkSlideAnswer(this, true, 'Sempurna! 6 kotak + 2 kotak (dari 4 segitiga) = 8 kotak satuan.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">8 kotak satuan</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 25: Sisa Soal Perhitungan Bentuk Abstrak (3-4)
+            {
+                section: "Latihan Abstrak",
+                title: "Kuis 3: Sisa Hitungan Luas Grid",
+                subtitle: "Tantangan pola grid yang lebih besar",
+                icon: "✏️",
+                render: () => `
+                    <div class="space-y-4 max-w-xl mx-auto text-xs md:text-sm">
+                        <div class="bg-blue-50 p-3 rounded-xl border border-blue-100">
+                            <p class="font-bold text-blue-950">Soal 8: Gambar pedang piksel memiliki <strong>8 kotak utuh</strong> dan <strong>2 buah segitiga setengah</strong>. Berapa luas total?</p>
+                            <!-- SHUFFLED: B (9 kotak) is correct, A (10 kotak) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, false, 'Salah.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">10 kotak satuan</button>
+                                <button onclick="checkSlideAnswer(this, true, 'Tepat! 8 kotak + 1 kotak (dari 2 segitiga) = 9 kotak satuan.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">9 kotak satuan</button>
+                            </div>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-xl border border-blue-100">
+                            <p class="font-bold text-blue-950">Soal 9 & 10: Arena panjat tebing mini digambar dengan <strong>10 kotak utuh</strong> dan <strong>6 buah segitiga setengah</strong>. Berapa luasnya?</p>
+                            <!-- SHUFFLED: A (13 kotak) is correct, B (16 kotak) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, true, 'Hebat! 10 kotak + 3 kotak (dari 6 segitiga) = 13 kotak satuan.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">13 kotak satuan</button>
+                                <button onclick="checkSlideAnswer(this, false, 'Salah.', 10)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">16 kotak satuan</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 26: Latihan Bentuk Abstrak - Soal Cerita (1-2)
+            {
+                section: "Latihan Abstrak",
+                title: "Kuis 4: Cerita Bentuk Abstrak (1-2)",
+                subtitle: "Aplikasi grid pada rancangan arsitektur anak",
+                icon: "📖",
+                render: () => `
+                    <div class="space-y-4 max-w-xl mx-auto text-xs md:text-sm">
+                        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                            <p class="font-bold text-emerald-950">Kasus 1: Menggambar Bendera Klub Bola</p>
+                            <p class="text-[11px] text-gray-600 mt-1">Kamu menggambar bendera klub bola kebanggaan di atas kertas berpetak. Gambarmu menutupi <strong>5 kotak utuh</strong> dan <strong>2 buah segitiga setengah</strong>. Berapa luas bendera tersebut?</p>
+                            <!-- SHUFFLED: B (6 kotak) is correct, A (7 kantong) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, false, 'Gabungkan 2 segitiga menjadi 1 kotak.', 15)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">7 kotak satuan</button>
+                                <button onclick="checkSlideAnswer(this, true, 'Sempurna! 5 kotak + 1 kotak (dari 2 segitiga) = 6 kotak satuan.', 15)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">6 kotak satuan</button>
+                            </div>
+                        </div>
+                        <div class="bg-emerald-50 p-3 rounded-xl border border-emerald-100">
+                            <p class="font-bold text-emerald-950">Kasus 2: Desain Kolam Renang Hotel</p>
+                            <p class="text-[11px] text-gray-600 mt-1">Desain denah kolam renang unik berbentuk abstrak menempati <strong>7 kotak utuh</strong> dan <strong>4 buah segitiga setengah</strong> di atas kertas cetak grid. Berapa luas total denah tersebut?</p>
+                            <!-- SHUFFLED: A (9 kotak) is correct, B (11) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, true, 'Tepat! 7 kotak + 2 kotak (dari 4 segitiga) = 9 kotak satuan.', 15)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">9 kotak satuan</button>
+                                <button onclick="checkSlideAnswer(this, false, 'Salah.', 15)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">11 kotak satuan</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 27: Sisa Soal Cerita Bentuk Abstrak (3-4)
+            {
+                section: "Latihan Abstrak",
+                title: "Kuis 4: Cerita Bentuk Abstrak (3-4)",
+                subtitle: "Pixel art & Game design challenge",
+                icon: "📖",
+                render: () => `
+                    <div class="space-y-4 max-w-xl mx-auto text-xs md:text-sm">
+                        <div class="bg-[#FFFDF5] p-3 rounded-xl border border-amber-200">
+                            <p class="font-bold text-amber-950">Kasus 3 & 4: Menggambar Pixel Art Tameng Kesatria</p>
+                            <p class="text-[11px] text-gray-600 mt-1">Dalam pelajaran menggambar, kamu membuat pola tameng kesatria piksel. Pola tersebut terdiri atas <strong>9 kotak utuh</strong> dan <strong>2 buah segitiga setengah</strong>. Berapa luas pola tameng tersebut?</p>
+                            <!-- SHUFFLED: B (10 kotak) is correct, A (11) is wrong -->
+                            <div class="flex gap-2 mt-2">
+                                <button onclick="checkSlideAnswer(this, false, 'Salah.', 15)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">11 kotak satuan</button>
+                                <button onclick="checkSlideAnswer(this, true, 'Luar biasa! 9 kotak + 1 kotak (dari 2 segitiga) = 10 kotak satuan.', 15)" class="bg-white px-3 py-1.5 rounded-lg border font-bold">10 kotak satuan</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 28: Soal Cerita Bentuk Abstrak 5 (HOTS)
+            {
+                section: "Latihan Abstrak",
+                title: "Kuis 4: Kasus Cerita 5 (Tantangan Arena Bermain)",
+                subtitle: "Kasus tingkat tinggi penggabungan area bermain",
+                icon: "🏔️",
+                render: () => `
+                    <div class="space-y-4 max-w-xl mx-auto text-xs md:text-sm">
+                        <div class="bg-red-50 p-3 rounded-xl border border-red-200">
+                            <p class="font-bold text-red-950">Kasus 5: Arena Trampolin & Kolam Bola</p>
+                            <p class="text-[11px] text-gray-600 mt-1">Di sebuah pusat bermain (*Games Center*), dibangun arena trampolin berbentuk abstrak yang menempati <strong>8 kotak utuh</strong> dan <strong>4 segitiga setengah</strong>. Di sampingnya menempel kolam bola persegi dengan panjang sisi <strong>3 meter</strong>. Manakah area yang berukuran lebih luas?</p>
+                        </div>
+                        <!-- SHUFFLED: B (Arena Trampolin) is correct, A (Kolam Bola) is wrong -->
+                        <div class="flex justify-center gap-2">
+                            <button onclick="checkSlideAnswer(this, false, 'Cari luas masing-masing (Trampolin = 10 m², Kolam bola = 9 m²), lalu bandingkan.', 10)" class="bg-white px-5 py-2.5 rounded-xl border font-bold text-xs">Kolam Bola</button>
+                            <button onclick="checkSlideAnswer(this, true, 'SANGAT JENIUS! Luas arena trampolin = 8 + 2 = 10 m². Luas kolam bola = s x s = 3 x 3 = 9 m². Jadi, arena trampolin (10 m²) lebih luas daripada kolam bola (9 m²)!', 20)" class="bg-white px-5 py-2.5 rounded-xl border font-bold text-xs">Arena Trampolin</button>
+                        </div>
+                    </div>
+                `
+            },
+            // Slide 29: Refleksi Perasaan
+            {
+                section: "Refleksi",
+                title: "Bagaimana Kepahaman Belajarmu?",
+                subtitle: "Self-Evaluation Kurikulum Merdeka Kelas 3",
+                icon: "🌿",
+                render: () => `
+                    <div class="text-center max-w-xl mx-auto">
+                        <p class="text-sm font-bold text-gray-600 mb-6">Pilih salah satu emotikon yang mewakili kesiapanmu hari ini:</p>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="handleEmotionSelect(this, 'paham')" class="bg-white hover:bg-emerald-50 border-2 border-emerald-200 p-4 rounded-2xl flex flex-col items-center transition active:scale-95">
+                                <span class="text-4xl mb-2">😎</span>
+                                <span class="text-xs font-bold text-gray-600">Sangat Paham</span>
+                            </button>
+                            <button onclick="handleEmotionSelect(this, 'latihan')" class="bg-white hover:bg-amber-50 border-2 border-amber-200 p-4 rounded-2xl flex flex-col items-center transition active:scale-95">
+                                <span class="text-4xl mb-2">🤔</span>
+                                <span class="text-xs font-bold text-gray-600">Butuh Latihan</span>
+                            </button>
+                            <button onclick="handleEmotionSelect(this, 'siap')" class="bg-white hover:bg-indigo-50 border-2 border-indigo-200 p-4 rounded-2xl flex flex-col items-center transition active:scale-95">
+                                <span class="text-4xl mb-2">🚀</span>
+                                <span class="text-xs font-bold text-gray-600">Siap Naik Level!</span>
+                            </button>
+                        </div>
+                        <p id="emotion-feedback" class="text-xs font-bold text-[#D84315] mt-6 min-h-[16px]"></p>
+                    </div>
+                `
+            },
+            // Slide 30: Kesimpulan
+            {
+                section: "Kesimpulan",
+                title: "Misi Detektif Luas Berhasil!",
+                subtitle: "Selamat, kamu resmi dikukuhkan sebagai Detektif Luas Berbakat!",
+                icon: "🏆",
+                render: () => `
+                    <div class="text-center">
+                        <span class="text-7xl block mb-3 animate-bounce">👑🏆</span>
+                        <h2 class="heading-font text-3xl font-extrabold text-[#D84315] mb-1">Misi Selesai Dengan Gemilang!</h2>
+                        <p class="text-xs md:text-sm text-gray-600 max-w-md mx-auto mb-6">Kamu telah melintasi 30 slide tantangan mencari panjang sisi dan menyatukan pecahan grid segitiga dengan sangat luar biasa!</p>
+                        <div onclick="resetAdventure()" class="inline-block bg-gradient-to-r from-[#FF8C00] to-[#E65100] text-white font-black px-8 py-3 rounded-2xl shadow-lg hover:scale-105 transition duration-300 cursor-pointer text-xs md:text-sm">
+                            🔄 ULANGI MISI PETUALANGAN
+                        </div>
+                    </div>
+                `
+            }
+        ];
+
+        // --- 3. SYSTEM STATE ---
+        let currentSlide = 0;
+        let score = 0;
+
+        // Canvas Sketchpad Context
+        const canvas = document.getElementById('scratch-canvas');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        // Confetti Context
+        const confettiCanvas = document.getElementById('confetti');
+        const confettiCtx = confettiCanvas.getContext('2d');
+        let confettiActive = false;
+        let particles = [];
+
+        // --- 4. ENGINE INITIALIZATION ---
+        window.onload = function() {
+            loadSlide(0);
+            initCanvas();
+            setupTouchGestures();
+        };
+
+        // --- 5. RENDER CONTROL SYSTEM ---
+        function loadSlide(index) {
+            if (index < 0 || index >= slides.length) return;
+            currentSlide = index;
+
+            const slide = slides[currentSlide];
+            
+            const headerHtml = `
+                <div class="mb-5 border-b-2 border-gray-100 pb-3">
+                    <span class="text-xs font-black text-[#FF8C00] uppercase tracking-widest">${slide.section}</span>
+                    <h1 class="heading-font text-2xl md:text-3xl font-extrabold text-slate-800 flex items-center gap-2 mt-1">
+                        <span>${slide.icon}</span> ${slide.title}
+                    </h1>
+                    <p class="text-xs text-gray-400 font-semibold italic">${slide.subtitle}</p>
+                </div>
+            `;
+            
+            document.getElementById('slide-content').innerHTML = headerHtml + slide.render();
+
+            // Progress Bar
+            const percent = ((currentSlide + 1) / slides.length) * 100;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+
+            // Footer metadata
+            document.getElementById('slide-index').innerText = `Slide ${currentSlide + 1} / ${slides.length}`;
+            document.getElementById('section-name').innerText = `Misi: ${slide.section}`;
+
+            // Arrow States
+            document.getElementById('prev-btn').style.opacity = currentSlide === 0 ? "0.3" : "1";
+            document.getElementById('next-btn').style.opacity = currentSlide === slides.length - 1 ? "0.3" : "1";
+
+            // Trigger Simulator Slide Action
+            if (currentSlide === 16) { 
+                setTimeout(updateComposite, 100);
+            }
+
+            // Trigger MathJax re-render for perfect formatting
+            if (window.MathJax) {
+                MathJax.typesetPromise();
+            }
+        }
+
+        function changeSlide(direction) {
+            const nextIdx = currentSlide + direction;
+            if (nextIdx >= 0 && nextIdx < slides.length) {
+                playSound('click');
+                loadSlide(nextIdx);
+            }
+        }
+
+        // --- 6. USER INTERACTION & VALIDATION ---
+        function checkSlideAnswer(element, isCorrect, feedback, points = 10) {
+            const parent = element.parentNode;
+            Array.from(parent.children).forEach(btn => {
+                btn.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-red-400', 'bg-red-50');
+            });
+
+            if (isCorrect) {
+                element.classList.add('border-emerald-500', 'bg-emerald-50');
+                playSound('correct');
+                showToast("✨ " + feedback, "bg-[#10B981]");
+                score += points;
+                document.getElementById('score-display').innerText = `${score} XP`;
+                triggerConfetti();
+            } else {
+                element.classList.add('border-red-400', 'bg-red-50');
+                playSound('incorrect');
+                showToast("❌ " + feedback, "bg-red-500");
+            }
+        }
+
+        function handleEmotionSelect(element, emotion) {
+            const parent = element.parentNode;
+            Array.from(parent.children).forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-[#FF8C00]', 'scale-105');
+            });
+            element.classList.add('ring-4', 'ring-[#FF8C00]', 'scale-105');
+            
+            const feedbackText = document.getElementById('emotion-feedback');
+            if (emotion === 'paham') {
+                feedbackText.innerText = "Luar biasa! Penemuan angka kembar luas persegi dan trik penggabungan segitiga sudah kamu kuasai secara mantap! 😎";
+                playSound('correct');
+                triggerConfetti();
+            } else if (emotion === 'latihan') {
+                feedbackText.innerText = "Semangat! Gunakan tombol 'Papan Cakar' di pojok kanan atas untuk melatih coret-coret menghitung kembali! 🧠";
+                playSound('click');
+            } else {
+                feedbackText.innerText = "Sangat Hebat! Jiwa detektif luasmu siap memecahkan rekayasa gambar tersulit sekalipun! 🚀";
+                playSound('correct');
+                triggerConfetti();
+            }
+        }
+
+        function showToast(text, bgClass) {
+            const toast = document.getElementById('toast');
+            const toastText = document.getElementById('toast-text');
+            toast.className = `fixed bottom-12 left-1/2 transform -translate-x-1/2 z-50 text-white font-black px-6 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-bounce ${bgClass}`;
+            toastText.innerHTML = text;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        function resetAdventure() {
+            score = 0;
+            document.getElementById('score-display').innerText = `0 XP`;
+            loadSlide(0);
+        }
+
+        // --- 7. DYNAMIC COMPOSITE SHAPE SIMULATOR ---
+        function updateComposite() {
+            const triCount = parseInt(document.getElementById('range-tri').value);
+            document.getElementById('val-tri').innerText = triCount;
+
+            const triResult = triCount / 2;
+            document.getElementById('tri-result').innerText = `${triResult} Kotak`;
+            document.getElementById('total-area-result').innerText = `${4 + triResult} Kotak Satuan`;
+
+            const group = document.getElementById('dynamic-triangles-group');
+            if (!group) return;
+
+            group.innerHTML = '';
+
+            // Draw triangles perfectly aligned and snapped to the grid!
+            if (triCount >= 2) {
+                // Triangle 1 (Left Wing Bottom) & Triangle 2 (Right Wing Bottom) -> 2 triangles!
+                group.innerHTML += '<polygon points="26,42 26,58 10,58" fill="#FCA5A5" fill-opacity="0.8" stroke="#EF4444" stroke-width="2"/>';
+                group.innerHTML += '<polygon points="58,42 58,58 74,58" fill="#FCA5A5" fill-opacity="0.8" stroke="#EF4444" stroke-width="2"/>';
+            }
+            if (triCount >= 4) {
+                // Triangle 3 (Left Wing Top) & Triangle 4 (Right Wing Top) -> 4 triangles total!
+                group.innerHTML += '<polygon points="26,42 10,42 10,58" fill="#FCA5A5" fill-opacity="0.8" stroke="#EF4444" stroke-width="2"/>';
+                group.innerHTML += '<polygon points="58,42 74,42 74,58" fill="#FCA5A5" fill-opacity="0.8" stroke="#EF4444" stroke-width="2"/>';
+            }
+            if (triCount >= 6) {
+                // Triangle 5 & 6 (Roof Left & Right) -> 6 triangles total!
+                group.innerHTML += '<polygon points="26,26 42,26 42,10" fill="#F59E0B" fill-opacity="0.8" stroke="#D97706" stroke-width="2"/>';
+                group.innerHTML += '<polygon points="42,26 58,26 42,10" fill="#F59E0B" fill-opacity="0.8" stroke="#D97706" stroke-width="2"/>';
+            }
+        }
+
+        // --- 8. DOODLE CANVAS SYSTEM ---
+        function toggleScratchpad() {
+            const pad = document.getElementById('scratchpad');
+            pad.classList.toggle('hidden');
+            if (!pad.classList.contains('hidden')) {
+                resizeCanvas();
+            }
+        }
+
+        function initCanvas() {
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                ctx.beginPath();
+                const r = canvas.getBoundingClientRect();
+                ctx.moveTo(e.clientX - r.left, e.clientY - r.top);
+            });
+            canvas.addEventListener('mousemove', (e) => {
+                if (!isDrawing) return;
+                const r = canvas.getBoundingClientRect();
+                ctx.lineTo(e.clientX - r.left, e.clientY - r.top);
+                ctx.stroke();
+            });
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                isDrawing = true;
+                ctx.beginPath();
+                const t = e.touches[0];
+                const r = canvas.getBoundingClientRect();
+                ctx.moveTo(t.clientX - r.left, t.clientY - r.top);
+            });
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                if (!isDrawing) return;
+                const t = e.touches[0];
+                const r = canvas.getBoundingClientRect();
+                ctx.lineTo(t.clientX - r.left, t.clientY - r.top);
+                ctx.stroke();
+            });
+            canvas.addEventListener('touchend', () => isDrawing = false);
+        }
+
+        function resizeCanvas() {
+            const parent = canvas.parentNode;
+            canvas.width = parent.clientWidth;
+            canvas.height = parent.clientHeight;
+            ctx.lineCap = 'round';
+            ctx.lineWidth = 3.5;
+            ctx.strokeStyle = '#00838F'; 
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // --- 9. SWIPE GESTURES ---
+        let startX = 0;
+        function setupTouchGestures() {
+            const wrapper = document.getElementById('slide-wrapper');
+            wrapper.addEventListener('touchstart', (e) => {
+                startX = e.changedTouches[0].screenX;
+            }, false);
+
+            wrapper.addEventListener('touchend', (e) => {
+                const endX = e.changedTouches[0].screenX;
+                const threshold = 60;
+                if (startX - endX > threshold) {
+                    changeSlide(1); 
+                } else if (endX - startX > threshold) {
+                    changeSlide(-1); 
+                }
+            }, false);
+        }
+
+        // --- 10. CONFETTI CELEBRATION SYSTEM ---
+        function triggerConfetti() {
+            confettiActive = true;
+            confettiCanvas.classList.remove('hidden');
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+            
+            particles = [];
+            for (let i = 0; i < 75; i++) {
+                particles.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                    r: Math.random() * 5 + 4,
+                    d: Math.random() * confettiCanvas.height,
+                    color: `hsl(${Math.random() * 360}, 100%, 70%)`,
+                    tilt: Math.random() * 10 - 5,
+                    tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+                    tiltAngle: 0
+                });
+            }
+
+            animateConfetti();
+            setTimeout(() => {
+                confettiActive = false;
+                confettiCanvas.classList.add('hidden');
+            }, 2500);
+        }
+
+        function animateConfetti() {
+            if (!confettiActive) return;
+            confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+            
+            particles.forEach((p, idx) => {
+                p.tiltAngle += p.tiltAngleIncremental;
+                p.y += (Math.cos(p.d) + 3 + p.r / 2) / 2;
+                p.x += Math.sin(p.tiltAngle);
+                p.tilt = Math.sin(p.tiltAngle - idx / 3) * 15;
+
+                confettiCtx.beginPath();
+                confettiCtx.lineWidth = p.r;
+                confettiCtx.strokeStyle = p.color;
+                confettiCtx.moveTo(p.x + p.tilt + p.r / 2, p.y);
+                confettiCtx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2);
+                confettiCtx.stroke();
+            });
+
+            requestAnimationFrame(animateConfetti);
+        }
+    </script>
+</body>
+</html>
