@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Luas Bangun Datar - Kelas 3 SD</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Ramah Anak -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        fredoka: ['Fredoka', 'cursive'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        ceria: {
+                            yellow: '#FFDE59',
+                            orange: '#FF914D',
+                            pink: '#FF66C4',
+                            purple: '#8C52FF',
+                            blue: '#5CE1E6',
+                            green: '#7ED957'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Fredoka', cursive, sans-serif;
+            background-color: #f4f9ff;
+        }
+        .bounce-hover:hover {
+            transform: translateY(-4px) scale(1.02);
+        }
+        .tab-btn.active {
+            background-color: #8C52FF;
+            color: white;
+            box-shadow: 0 4px 12px rgba(140, 82, 255, 0.3);
+        }
+        .grid-tile {
+            transition: all 0.15s ease;
+        }
+        .grid-tile:hover {
+            transform: scale(1.1);
+            z-index: 20;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #FF914D;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col selection:bg-yellow-200">
+
+    <!-- HEADER CERIA -->
+    <header class="bg-white border-b-4 border-yellow-300 sticky top-0 z-50 shadow-md">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-pink-500 flex items-center justify-center text-white text-2xl shadow-lg transform -rotate-3">
+                    📐
+                </div>
+                <div>
+                    <h1 class="font-bold text-slate-800 text-xl sm:text-2xl leading-none">Petualangan Luas!</h1>
+                    <p class="text-xs text-purple-600 font-semibold mt-1">Matematika Ceria Kelas 3 SD 🎈</p>
+                </div>
+            </div>
+            
+            <!-- Indicator Skor Bintang -->
+            <div class="flex items-center gap-3 bg-yellow-100 px-4 py-2 rounded-2xl border-2 border-yellow-300">
+                <span class="text-2xl">⭐</span>
+                <div>
+                    <div class="text-[10px] text-amber-800 font-bold uppercase tracking-wider">Progres Belajar</div>
+                    <div id="module-progress-text" class="text-sm font-black text-amber-600">0% Selesai</div>
+                </div>
+                <div class="w-24 bg-white h-3 rounded-full overflow-hidden border border-amber-300 ml-1">
+                    <div id="module-progress" class="bg-gradient-to-r from-amber-400 to-emerald-400 h-full w-0 transition-all duration-500"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MENU NAVIGASI TAB TAB -->
+        <div class="bg-purple-50 border-t border-purple-100 overflow-x-auto py-2 px-4">
+            <div class="max-w-6xl mx-auto flex gap-2 text-sm font-semibold whitespace-nowrap">
+                <button onclick="switchTab('tujuan')" id="tab-tujuan" class="tab-btn active px-4 py-2 rounded-xl transition duration-200 flex items-center gap-1.5">
+                    🎯 1. Tujuan
+                </button>
+                <button onclick="switchTab('warmup')" id="tab-warmup" class="tab-btn px-4 py-2 rounded-xl transition duration-200 flex items-center gap-1.5 text-slate-600 bg-white hover:bg-purple-100">
+                    🔥 2. Warm-Up (8)
+                </button>
+                <button onclick="switchTab('koneksi')" id="tab-koneksi" class="tab-btn px-4 py-2 rounded-xl transition duration-200 flex items-center gap-1.5 text-slate-600 bg-white hover:bg-purple-100">
+                    🌍 3. Beda K & L
+                </button>
+                <button onclick="switchTab('materi')" id="tab-materi" class="tab-btn px-4 py-2 rounded-xl transition duration-200 flex items-center gap-1.5 text-slate-600 bg-white hover:bg-purple-100">
+                    🧩 4. Lab Kotak
+                </button>
+                <button onclick="switchTab('contoh')" id="tab-contoh" class="tab-btn px-4 py-2 rounded-xl transition duration-200 flex items-center gap-1.5 text-slate-600 bg-white hover:bg-purple-100">
+                    💡 5. Contoh Soal
+                </button>
+                <button onclick="switchTab('latihan')" id="tab-latihan" class="tab-btn px-4 py-2 rounded-xl transition duration-200 flex items-center gap-1.5 text-slate-600 bg-white hover:bg-purple-100">
+                    ✏️ 6. Latihan (5)
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+
+        <!-- TAB 1: TUJUAN PEMBELAJARAN -->
+        <section id="sec-tujuan" class="tab-content block space-y-6">
+            <div class="bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
+                <div class="max-w-2xl relative z-10">
+                    <span class="bg-yellow-300 text-slate-900 text-xs font-black px-3 py-1 rounded-full inline-block mb-3">Halo Teman-Teman Kelas 3! 👋</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold mb-3">Yuk, Belajar Menghitung Luas!</h2>
+                    <p class="text-blue-100 text-sm sm:text-base leading-relaxed">
+                        Pernahkah kamu melihat ubin di lantai kamar atau papan tulis di kelas? Hari ini kita akan belajar menghitung berapa banyak petak yang menutupi permukaan bangun datar!
+                    </p>
+                </div>
+                <!-- Kartun Maskot Ilustrasi -->
+                <div class="hidden md:block absolute right-6 bottom-2 w-48 opacity-90">
+                    <svg viewBox="0 0 200 200" class="w-full h-full">
+                        <rect x="20" y="30" width="120" height="120" rx="15" fill="#FFDE59" stroke="#333" stroke-width="4"/>
+                        <circle cx="50" cy="70" r="10" fill="#333"/>
+                        <circle cx="110" cy="70" r="10" fill="#333"/>
+                        <path d="M 60 100 Q 80 120 100 100" fill="transparent" stroke="#333" stroke-width="5" stroke-linecap="round"/>
+                        <rect x="130" y="10" width="50" height="50" rx="10" fill="#FF66C4" stroke="#333" stroke-width="3"/>
+                        <text x="142" y="42" font-size="28">📐</text>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-5">
+                <div class="bg-white rounded-3xl p-5 border-3 border-sky-200 shadow-sm bounce-hover transition">
+                    <div class="w-12 h-12 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center text-2xl font-bold mb-3">1</div>
+                    <h3 class="font-bold text-slate-800 text-lg mb-1">Mengenal Luas 🟩</h3>
+                    <p class="text-slate-600 text-xs leading-relaxed">Luas adalah jumlah kotak satuan yang menutupi seluruh permukaan bangun.</p>
+                </div>
+                <div class="bg-white rounded-3xl p-5 border-3 border-purple-200 shadow-sm bounce-hover transition">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-2xl flex items-center justify-center text-2xl font-bold mb-3">2</div>
+                    <h3 class="font-bold text-slate-800 text-lg mb-1">Rumus Mudah ⚡</h3>
+                    <p class="text-slate-600 text-xs leading-relaxed">Menghitung luas tanpa perlu menghitung kotaknya satu per satu!</p>
+                </div>
+                <div class="bg-white rounded-3xl p-5 border-3 border-emerald-200 shadow-sm bounce-hover transition">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl font-bold mb-3">3</div>
+                    <h3 class="font-bold text-slate-800 text-lg mb-1">Pariwisata Nyata 🏠</h3>
+                    <p class="text-slate-600 text-xs leading-relaxed">Mengetahui beda mengukur pagar (Keliling) dan karpet lantai (Luas).</p>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button onclick="switchTab('warmup')" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-6 py-3 rounded-2xl shadow-lg flex items-center gap-2 transition text-sm">
+                    Ayo Mulai Warm-Up! 🚀
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 2: WARM-UP (8 SOAL) -->
+        <section id="sec-warmup" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 border-3 border-amber-200 shadow-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                    <div>
+                        <span class="bg-amber-100 text-amber-800 text-xs font-bold px-3 py-1 rounded-full">Latihan Pemanasan</span>
+                        <h2 class="text-2xl font-extrabold text-slate-800 mt-1">Warm-Up: Perkalian & Keliling 🔥</h2>
+                        <p class="text-slate-500 text-xs">Jawab 8 soal berikut untuk membuka ingatan perkalianmu!</p>
+                    </div>
+                    <div class="bg-amber-50 border-2 border-amber-300 px-4 py-2 rounded-2xl flex items-center gap-2">
+                        <span class="text-2xl">🏆</span>
+                        <div>
+                            <div class="text-[10px] text-amber-800 font-bold">Skor Pemanasan</div>
+                            <div id="warmup-score" class="text-base font-black text-amber-600">0 / 8 Soal</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Warm Up Grid Container -->
+                <div class="grid md:grid-cols-2 gap-4" id="warmup-container">
+                    <!-- Dynamic rendering via JS -->
+                </div>
+
+                <div class="mt-6 p-4 bg-purple-50 border-2 border-purple-200 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
+                    <p class="text-xs text-purple-900 font-medium">
+                        💡 <b>Tips:</b> Ketik angka jawabanmu lalu klik tombol periksa di bawah!
+                    </p>
+                    <button onclick="checkWarmUp()" class="bg-amber-500 hover:bg-amber-600 text-white font-black px-6 py-2.5 rounded-xl shadow-md transition text-xs w-full sm:w-auto">
+                        Periksa Semua Jawaban ✨
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <button onclick="switchTab('tujuan')" class="text-slate-500 font-bold text-xs px-4 py-2">
+                    ⬅️ Kembali
+                </button>
+                <button onclick="switchTab('koneksi')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-3 rounded-2xl shadow-md flex items-center gap-2 transition text-sm">
+                    Lanjut: Beda K & L ➡️
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 3: KONEKSI NYATA (K vs L) -->
+        <section id="sec-koneksi" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border-3 border-sky-200 shadow-sm space-y-6">
+                <div class="text-center max-w-xl mx-auto">
+                    <span class="bg-sky-100 text-sky-800 text-xs font-bold px-3 py-1 rounded-full">Dunia Nyata</span>
+                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-800 mt-1">Jangan Sampai Tertukar! 🤔</h2>
+                    <p class="text-slate-500 text-xs mt-1">Membedakan <b>Keliling</b> (garis luar) dan <b>Luas</b> (isi dalam).</p>
+                </div>
+
+                <!-- Kartu Perbandingan K vs L dengan Gambar SVG -->
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Keliling -->
+                    <div class="bg-amber-50 border-3 border-amber-300 rounded-3xl p-5 relative overflow-hidden">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 bg-amber-400 text-white rounded-2xl flex items-center justify-center font-bold text-lg">
+                                📏
+                            </div>
+                            <div>
+                                <h3 class="font-extrabold text-amber-900 text-lg">1. KELILING</h3>
+                                <p class="text-xs text-amber-700 font-semibold">Garis Tepi Pinggir</p>
+                            </div>
+                        </div>
+
+                        <!-- Gambar SVG Pagar Taman -->
+                        <div class="bg-white p-3 rounded-2xl border-2 border-amber-200 my-3 flex justify-center">
+                            <svg viewBox="0 0 200 100" class="w-full h-28">
+                                <rect x="20" y="20" width="160" height="60" fill="#FEF3C7" stroke="#F59E0B" stroke-width="4" stroke-dasharray="8,4" rx="8"/>
+                                <!-- Pagar melingkar -->
+                                <path d="M 15 15 L 185 15 L 185 85 L 15 85 Z" fill="none" stroke="#D97706" stroke-width="3"/>
+                                <text x="100" y="55" font-size="12" font-weight="bold" fill="#B45309" text-anchor="middle">Hanya Garis Pagar Tepi!</text>
+                            </svg>
+                        </div>
+
+                        <ul class="text-xs text-slate-700 space-y-2 font-medium">
+                            <li class="flex items-center gap-2">🔹 Menghitung panjang <b>pagar</b> kebun.</li>
+                            <li class="flex items-center gap-2">🔹 Menghitung <b>pita renda</b> di tepi taplak meja.</li>
+                            <li class="flex items-center gap-2">🔹 Satuan: <b>cm</b> atau <b>m</b>.</li>
+                        </ul>
+                    </div>
+
+                    <!-- Luas -->
+                    <div class="bg-sky-50 border-3 border-sky-300 rounded-3xl p-5 relative overflow-hidden">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 bg-sky-500 text-white rounded-2xl flex items-center justify-center font-bold text-lg">
+                                🟨
+                            </div>
+                            <div>
+                                <h3 class="font-extrabold text-sky-900 text-lg">2. LUAS</h3>
+                                <p class="text-xs text-sky-700 font-semibold">Seluruh Isi Permukaan</p>
+                            </div>
+                        </div>
+
+                        <!-- Gambar SVG Ubin Lantai Full -->
+                        <div class="bg-white p-3 rounded-2xl border-2 border-sky-200 my-3 flex justify-center">
+                            <svg viewBox="0 0 200 100" class="w-full h-28">
+                                <!-- Grid Ubin Warna-warni -->
+                                <g fill="#BAE6FD" stroke="#0284C7" stroke-width="2">
+                                    <rect x="20" y="20" width="40" height="30" fill="#7DD3FC"/>
+                                    <rect x="60" y="20" width="40" height="30" fill="#38BDF8"/>
+                                    <rect x="100" y="20" width="40" height="30" fill="#7DD3FC"/>
+                                    <rect x="140" y="20" width="40" height="30" fill="#38BDF8"/>
+                                    <rect x="20" y="50" width="40" height="30" fill="#38BDF8"/>
+                                    <rect x="60" y="50" width="40" height="30" fill="#7DD3FC"/>
+                                    <rect x="100" y="50" width="40" height="30" fill="#38BDF8"/>
+                                    <rect x="140" y="50" width="40" height="30" fill="#7DD3FC"/>
+                                </g>
+                                <text x="100" y="58" font-size="12" font-weight="bold" fill="#0369A1" text-anchor="middle">Semua Kotak Didalamnya!</text>
+                            </svg>
+                        </div>
+
+                        <ul class="text-xs text-slate-700 space-y-2 font-medium">
+                            <li class="flex items-center gap-2">🔹 Menghitung banyak <b>ubin lantai</b>.</li>
+                            <li class="flex items-center gap-2">🔹 Menghitung luas <b>karpet kamar</b>.</li>
+                            <li class="flex items-center gap-2">🔹 Satuan: <b>cm²</b> (sentimeter persegi) atau <b>m²</b>.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <button onclick="switchTab('warmup')" class="text-slate-500 font-bold text-xs px-4 py-2">
+                    ⬅️ Kembali
+                </button>
+                <button onclick="switchTab('materi')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-3 rounded-2xl shadow-md flex items-center gap-2 transition text-sm">
+                    Lanjut: Lab Kotak ➡️
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 4: MATERI & LAB KOTAK VISUAL -->
+        <section id="sec-materi" class="tab-content hidden space-y-6">
+            <!-- Kartu Rangkuman Rumus -->
+            <div class="grid md:grid-cols-2 gap-5">
+                <div class="bg-yellow-100 border-3 border-yellow-300 rounded-3xl p-5 text-center shadow-sm">
+                    <span class="bg-yellow-400 text-yellow-900 text-[10px] font-black px-3 py-1 rounded-full uppercase">1. Persegi</span>
+                    <h3 class="text-xl font-black text-slate-800 mt-2">Sisi Saling Sama Panjang</h3>
+                    <div class="bg-white p-3 rounded-2xl border-2 border-yellow-300 mt-3">
+                        <p class="text-xs text-slate-500 font-bold">Rumus Luas Persegi:</p>
+                        <p class="text-xl font-black text-amber-600 mt-1">Luas = Sisi × Sisi</p>
+                    </div>
+                </div>
+
+                <div class="bg-purple-100 border-3 border-purple-300 rounded-3xl p-5 text-center shadow-sm">
+                    <span class="bg-purple-300 text-purple-900 text-[10px] font-black px-3 py-1 rounded-full uppercase">2. Persegi Panjang</span>
+                    <h3 class="text-xl font-black text-slate-800 mt-2">Ada Panjang dan Lebar</h3>
+                    <div class="bg-white p-3 rounded-2xl border-2 border-purple-300 mt-3">
+                        <p class="text-xs text-slate-500 font-bold">Rumus Luas Persegi Panjang:</p>
+                        <p class="text-xl font-black text-purple-600 mt-1">Luas = Panjang × Lebar</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIMULASI INTERAKTIF PETAK SATUAN -->
+            <div class="bg-white rounded-3xl p-6 border-3 border-indigo-200 shadow-md">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 pb-3 border-b border-slate-100">
+                    <div>
+                        <span class="bg-indigo-100 text-indigo-800 text-xs font-bold px-3 py-1 rounded-full">Eksplorasi Mandiri</span>
+                        <h3 class="text-2xl font-extrabold text-slate-800 mt-1">Laboratorium Petak Satuan 🧩</h3>
+                        <p class="text-xs text-slate-500">Geser tombol di bawah untuk mengubah ukuran kotak!</p>
+                    </div>
+
+                    <!-- Tombol Mode Bangun -->
+                    <div class="bg-slate-100 p-1.5 rounded-2xl flex gap-1">
+                        <button id="btn-mode-rect" onclick="setVisualizerMode('rectangle')" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-600 text-white shadow">
+                            Persegi Panjang
+                        </button>
+                        <button id="btn-mode-square" onclick="setVisualizerMode('square')" class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900">
+                            Persegi
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-12 gap-6 items-center">
+                    <!-- Controls Slider (5 Kolom) -->
+                    <div class="md:col-span-5 space-y-4 bg-slate-50 p-5 rounded-3xl border-2 border-slate-200">
+                        <div id="control-length-group">
+                            <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                <span>Panjang (p):</span>
+                                <span id="val-p" class="text-purple-600 font-black text-sm">5 kotak</span>
+                            </div>
+                            <input type="range" id="slider-p" min="1" max="7" value="5" oninput="updateVisualizer()" class="w-full accent-purple-600 cursor-pointer h-3 bg-slate-200 rounded-lg">
+                        </div>
+
+                        <div id="control-width-group">
+                            <div class="flex justify-between text-xs font-bold text-slate-700 mb-1">
+                                <span>Lebar (l):</span>
+                                <span id="val-l" class="text-purple-600 font-black text-sm">3 kotak</span>
+                            </div>
+                            <input type="range" id="slider-l" min="1" max="6" value="3" oninput="updateVisualizer()" class="w-full accent-purple-600 cursor-pointer h-3 bg-slate-200 rounded-lg">
+                        </div>
+
+                        <div class="pt-2 border-t border-slate-200">
+                            <div class="bg-purple-100 p-4 rounded-2xl text-center border-2 border-purple-300">
+                                <div class="text-xs font-bold text-purple-800" id="vis-formula-str">Perhitungan: 5 × 3</div>
+                                <div class="text-lg font-black text-purple-900 mt-1" id="vis-result-str">Total Luas = 15 Kotak</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Area Grid Viewport (7 Kolom) -->
+                    <div class="md:col-span-7 flex flex-col items-center justify-center p-6 bg-slate-100 rounded-3xl min-h-[260px] border-2 border-slate-200 overflow-auto">
+                        <div id="grid-canvas" class="grid gap-1.5 p-3 bg-white rounded-2xl border-4 border-purple-400 shadow-md">
+                            <!-- Dynamic grid tiles -->
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-3 font-semibold">👇 Arahkan kursor atau sentuh kotak untuk menghitung!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <button onclick="switchTab('koneksi')" class="text-slate-500 font-bold text-xs px-4 py-2">
+                    ⬅️ Kembali
+                </button>
+                <button onclick="switchTab('contoh')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-3 rounded-2xl shadow-md flex items-center gap-2 transition text-sm">
+                    Lanjut: Contoh Soal ➡️
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 5: CONTOH SOAL BERGAMBAR -->
+        <section id="sec-contoh" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 border-3 border-yellow-200 shadow-sm">
+                <span class="bg-yellow-100 text-yellow-800 text-xs font-bold px-3 py-1 rounded-full">Pelajari Dulu!</span>
+                <h2 class="text-2xl font-extrabold text-slate-800 mt-1">Contoh Soal Bergambar 💡</h2>
+                <p class="text-slate-500 text-xs mb-6">Klik tombol 'Lihat Pembahasan' untuk melihat cara mengerjakannya!</p>
+
+                <div class="space-y-6">
+                    <!-- Contoh 1: Taplak Catur -->
+                    <div class="border-3 border-slate-200 rounded-3xl overflow-hidden bg-slate-50">
+                        <div class="p-5 flex flex-col md:flex-row items-center gap-5">
+                            <!-- SVG Ilustrasi Taplak -->
+                            <div class="w-32 h-32 bg-white rounded-2xl border-2 border-slate-300 p-2 shrink-0 flex items-center justify-center shadow-inner">
+                                <svg viewBox="0 0 100 100" class="w-full h-full">
+                                    <rect x="5" y="5" width="90" height="90" fill="#FEF08A" stroke="#CA8A04" stroke-width="3" rx="6"/>
+                                    <path d="M 5 35 L 95 35 M 5 65 L 95 65 M 35 5 L 35 95 M 65 5 L 65 95" stroke="#CA8A04" stroke-width="1.5" stroke-dasharray="3,3"/>
+                                    <text x="50" y="55" font-size="10" font-weight="bold" fill="#854D0E" text-anchor="middle">Sisi = 25 cm</text>
+                                </svg>
+                            </div>
+                            <div class="flex-grow">
+                                <span class="bg-amber-400 text-amber-950 text-[10px] font-black px-2.5 py-1 rounded-md">Contoh 1 (Persegi)</span>
+                                <h4 class="font-bold text-slate-800 text-base mt-1">Luas Papan Serbet Catur</h4>
+                                <p class="text-xs text-slate-600 mt-1">Sebuah serbet berbentuk persegi memiliki panjang sisi <b>25 cm</b>. Berapakah luas serbet tersebut?</p>
+                                <button onclick="toggleExplanation('exp-1')" class="mt-3 text-xs font-bold text-purple-700 bg-purple-100 hover:bg-purple-200 px-4 py-2 rounded-xl transition border border-purple-200">
+                                    🔍 Lihat Pembahasan
+                                </button>
+                            </div>
+                        </div>
+                        <div id="exp-1" class="hidden p-5 bg-white border-t-2 border-slate-200 text-xs space-y-2">
+                            <p><b>Diketahui:</b> Sisi = 25 cm</p>
+                            <p><b>Ditanya:</b> Luas serbet?</p>
+                            <div class="bg-amber-50 p-3 rounded-2xl border border-amber-200 font-bold text-amber-900 my-2">
+                                Luas = Sisi × Sisi <br>
+                                Luas = 25 cm × 25 cm = <b>625 cm²</b>
+                            </div>
+                            <p class="text-emerald-600 font-bold">✅ Jadi, luas serbet tersebut adalah 625 cm².</p>
+                        </div>
+                    </div>
+
+                    <!-- Contoh 2: Taman Lapangan Rumput -->
+                    <div class="border-3 border-slate-200 rounded-3xl overflow-hidden bg-slate-50">
+                        <div class="p-5 flex flex-col md:flex-row items-center gap-5">
+                            <!-- SVG Lapangan Sepakbola -->
+                            <div class="w-36 h-28 bg-emerald-500 rounded-2xl border-2 border-emerald-700 p-2 shrink-0 flex items-center justify-center shadow-inner relative">
+                                <svg viewBox="0 0 120 80" class="w-full h-full">
+                                    <rect x="5" y="5" width="110" height="70" fill="none" stroke="white" stroke-width="2" rx="4"/>
+                                    <line x1="60" y1="5" x2="60" y2="75" stroke="white" stroke-width="2"/>
+                                    <circle cx="60" cy="40" r="12" fill="none" stroke="white" stroke-width="2"/>
+                                </svg>
+                                <span class="absolute bottom-1 text-[9px] bg-black/60 text-white px-2 rounded font-bold">100m × 64m</span>
+                            </div>
+                            <div class="flex-grow">
+                                <span class="bg-emerald-400 text-emerald-950 text-[10px] font-black px-2.5 py-1 rounded-md">Contoh 2 (Persegi Panjang)</span>
+                                <h4 class="font-bold text-slate-800 text-base mt-1">Luas Lapangan Bola</h4>
+                                <p class="text-xs text-slate-600 mt-1">Lapangan rumput memiliki panjang <b>100 m</b> dan lebar <b>64 m</b>. Berapakah luas lapangan tersebut?</p>
+                                <button onclick="toggleExplanation('exp-2')" class="mt-3 text-xs font-bold text-purple-700 bg-purple-100 hover:bg-purple-200 px-4 py-2 rounded-xl transition border border-purple-200">
+                                    🔍 Lihat Pembahasan
+                                </button>
+                            </div>
+                        </div>
+                        <div id="exp-2" class="hidden p-5 bg-white border-t-2 border-slate-200 text-xs space-y-2">
+                            <p><b>Diketahui:</b> Panjang = 100 m, Lebar = 64 m</p>
+                            <p><b>Ditanya:</b> Luas lapangan?</p>
+                            <div class="bg-emerald-50 p-3 rounded-2xl border border-emerald-200 font-bold text-emerald-900 my-2">
+                                Luas = Panjang × Lebar <br>
+                                Luas = 100 m × 64 m = <b>6.400 m²</b>
+                            </div>
+                            <p class="text-emerald-600 font-bold">✅ Jadi, luas lapangan rumput adalah 6.400 m².</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <button onclick="switchTab('materi')" class="text-slate-500 font-bold text-xs px-4 py-2">
+                    ⬅️ Kembali
+                </button>
+                <button onclick="switchTab('latihan')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold px-6 py-3 rounded-2xl shadow-md flex items-center gap-2 transition text-sm">
+                    Lanjut: Latihan Soal (5) ✏️
+                </button>
+            </div>
+        </section>
+
+        <!-- TAB 6: LATIHAN TERBIMBING (5 SOAL WITH ILLUSTRATIONS) -->
+        <section id="sec-latihan" class="tab-content hidden space-y-6">
+            <div class="bg-white rounded-3xl p-6 border-3 border-pink-200 shadow-sm">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 pb-4 border-b border-slate-100">
+                    <div>
+                        <span class="bg-pink-100 text-pink-800 text-xs font-bold px-3 py-1 rounded-full">Uji Pemahaman</span>
+                        <h2 class="text-2xl font-extrabold text-slate-800 mt-1">Latihan Mandiri ✏️</h2>
+                        <p class="text-slate-500 text-xs">Kerjakan 5 soal berikut. Kamu bisa klik petunjuk jika bingung!</p>
+                    </div>
+                    <div class="bg-pink-50 border-2 border-pink-300 px-4 py-2 rounded-2xl flex items-center gap-2">
+                        <span class="text-2xl">🌟</span>
+                        <div>
+                            <div class="text-[10px] text-pink-800 font-bold">Total Nilai</div>
+                            <div id="practice-score" class="text-base font-black text-pink-600">0 / 500 Poin</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LIST 5 SOAL BERGAMBAR -->
+                <div class="space-y-6" id="practice-questions-container">
+                    
+                    <!-- SOAL 1 -->
+                    <div id="qcard-1" class="border-3 border-slate-200 rounded-3xl p-5 bg-slate-50 transition">
+                        <div class="flex flex-col md:flex-row gap-5 items-center">
+                            <!-- SVG Taplak Meja -->
+                            <div class="w-28 h-28 bg-white rounded-2xl border-2 border-pink-200 p-2 shrink-0 flex items-center justify-center shadow-sm">
+                                <svg viewBox="0 0 100 100" class="w-full h-full">
+                                    <rect x="10" y="10" width="80" height="80" fill="#FCE7F3" stroke="#EC4899" stroke-width="3" rx="8"/>
+                                    <circle cx="25" cy="25" r="5" fill="#F472B6"/>
+                                    <circle cx="75" cy="25" r="5" fill="#F472B6"/>
+                                    <circle cx="25" cy="75" r="5" fill="#F472B6"/>
+                                    <circle cx="75" cy="75" r="5" fill="#F472B6"/>
+                                    <text x="50" y="55" font-size="11" font-weight="bold" fill="#9D174D" text-anchor="middle">14 cm</text>
+                                </svg>
+                            </div>
+                            <div class="flex-grow space-y-3 w-full">
+                                <div class="flex justify-between items-center">
+                                    <span class="bg-pink-200 text-pink-900 text-[10px] font-black px-2.5 py-1 rounded-md">Soal 1 (Taplak Meja)</span>
+                                    <span id="qstatus-1" class="text-xs font-bold text-slate-400">Belum dijawab</span>
+                                </div>
+                                <p class="text-xs sm:text-sm font-bold text-slate-800">
+                                    Sebuah taplak meja persegi memiliki panjang sisi <b>14 cm</b>. Berapakah luas taplak meja tersebut?
+                                </p>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <input type="number" id="input-q1" placeholder="Jawaban..." class="bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-purple-500 w-32">
+                                    <span class="text-xs font-bold text-slate-500">cm²</span>
+                                    <button onclick="checkPracticeAnswer(1, 196)" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition">
+                                        Jawab
+                                    </button>
+                                    <button onclick="toggleHint(1)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold px-3 py-2 rounded-xl transition">
+                                        💡 Petunjuk
+                                    </button>
+                                </div>
+                                <div id="hint-1" class="hidden bg-amber-50 border border-amber-300 p-2.5 rounded-xl text-xs text-amber-900">
+                                    💡 <b>Petunjuk:</b> Kalikan sisi × sisi (14 × 14).
+                                </div>
+                                <div id="feedback-1" class="hidden text-xs p-2.5 rounded-xl font-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SOAL 2 -->
+                    <div id="qcard-2" class="border-3 border-slate-200 rounded-3xl p-5 bg-slate-50 transition">
+                        <div class="flex flex-col md:flex-row gap-5 items-center">
+                            <!-- SVG Taman Sekolah -->
+                            <div class="w-32 h-24 bg-emerald-100 rounded-2xl border-2 border-emerald-300 p-2 shrink-0 flex items-center justify-center shadow-sm">
+                                <svg viewBox="0 0 100 70" class="w-full h-full">
+                                    <rect x="5" y="5" width="90" height="60" fill="#A7F3D0" stroke="#059669" stroke-width="2" rx="6"/>
+                                    <text x="50" y="32" font-size="16" text-anchor="middle">🌸🌻🌸</text>
+                                    <text x="50" y="52" font-size="9" font-weight="bold" fill="#065F46" text-anchor="middle">15m × 8m</text>
+                                </svg>
+                            </div>
+                            <div class="flex-grow space-y-3 w-full">
+                                <div class="flex justify-between items-center">
+                                    <span class="bg-emerald-200 text-emerald-900 text-[10px] font-black px-2.5 py-1 rounded-md">Soal 2 (Taman Bunga)</span>
+                                    <span id="qstatus-2" class="text-xs font-bold text-slate-400">Belum dijawab</span>
+                                </div>
+                                <p class="text-xs sm:text-sm font-bold text-slate-800">
+                                    Taman sekolah berbentuk persegi panjang dengan panjang <b>15 m</b> dan lebar <b>8 m</b>. Berapakah luas taman tersebut?
+                                </p>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <input type="number" id="input-q2" placeholder="Jawaban..." class="bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-purple-500 w-32">
+                                    <span class="text-xs font-bold text-slate-500">m²</span>
+                                    <button onclick="checkPracticeAnswer(2, 120)" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition">
+                                        Jawab
+                                    </button>
+                                    <button onclick="toggleHint(2)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold px-3 py-2 rounded-xl transition">
+                                        💡 Petunjuk
+                                    </button>
+                                </div>
+                                <div id="hint-2" class="hidden bg-amber-50 border border-amber-300 p-2.5 rounded-xl text-xs text-amber-900">
+                                    💡 <b>Petunjuk:</b> Kalikan panjang × lebar (15 × 8).
+                                </div>
+                                <div id="feedback-2" class="hidden text-xs p-2.5 rounded-xl font-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SOAL 3 -->
+                    <div id="qcard-3" class="border-3 border-slate-200 rounded-3xl p-5 bg-slate-50 transition">
+                        <div class="flex flex-col md:flex-row gap-5 items-center">
+                            <!-- SVG Papan Tulis SD -->
+                            <div class="w-32 h-24 bg-emerald-800 rounded-2xl border-4 border-amber-700 p-2 shrink-0 flex items-center justify-center shadow-sm">
+                                <div class="text-center text-white">
+                                    <p class="text-[9px] font-bold text-yellow-300">Luas = 108 cm²</p>
+                                    <p class="text-[9px] text-white mt-1">Panjang = 12 cm</p>
+                                </div>
+                            </div>
+                            <div class="flex-grow space-y-3 w-full">
+                                <div class="flex justify-between items-center">
+                                    <span class="bg-amber-200 text-amber-900 text-[10px] font-black px-2.5 py-1 rounded-md">Soal 3 (Papan Tulis)</span>
+                                    <span id="qstatus-3" class="text-xs font-bold text-slate-400">Belum dijawab</span>
+                                </div>
+                                <p class="text-xs sm:text-sm font-bold text-slate-800">
+                                    Papan tulis kecil memiliki Luas = <b>108 cm²</b> dan Panjang = <b>12 cm</b>. Berapakah <b>Lebar</b> papan tulis tersebut?
+                                </p>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <input type="number" id="input-q3" placeholder="Jawaban..." class="bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-purple-500 w-32">
+                                    <span class="text-xs font-bold text-slate-500">cm</span>
+                                    <button onclick="checkPracticeAnswer(3, 9)" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition">
+                                        Jawab
+                                    </button>
+                                    <button onclick="toggleHint(3)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold px-3 py-2 rounded-xl transition">
+                                        💡 Petunjuk
+                                    </button>
+                                </div>
+                                <div id="hint-3" class="hidden bg-amber-50 border border-amber-300 p-2.5 rounded-xl text-xs text-amber-900">
+                                    💡 <b>Petunjuk:</b> Lebar = Luas ÷ Panjang (108 ÷ 12).
+                                </div>
+                                <div id="feedback-3" class="hidden text-xs p-2.5 rounded-xl font-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SOAL 4 -->
+                    <div id="qcard-4" class="border-3 border-slate-200 rounded-3xl p-5 bg-slate-50 transition">
+                        <div class="flex flex-col md:flex-row gap-5 items-center">
+                            <!-- SVG Lantai & Ubin -->
+                            <div class="w-28 h-24 bg-sky-200 rounded-2xl border-2 border-sky-400 p-1 shrink-0 flex items-center justify-center">
+                                <svg viewBox="0 0 60 40" class="w-full h-full">
+                                    <g fill="#38BDF8" stroke="#0284C7" stroke-width="1">
+                                        <rect x="2" y="2" width="12" height="8"/>
+                                        <rect x="16" y="2" width="12" height="8"/>
+                                        <rect x="30" y="2" width="12" height="8"/>
+                                        <rect x="44" y="2" width="12" height="8"/>
+                                        <rect x="2" y="12" width="12" height="8"/>
+                                        <rect x="16" y="12" width="12" height="8"/>
+                                        <rect x="30" y="12" width="12" height="8"/>
+                                        <rect x="44" y="12" width="12" height="8"/>
+                                    </g>
+                                    <text x="30" y="32" font-size="6" font-weight="bold" fill="#0369A1" text-anchor="middle">Lantai 6m × 4m</text>
+                                </svg>
+                            </div>
+                            <div class="flex-grow space-y-3 w-full">
+                                <div class="flex justify-between items-center">
+                                    <span class="bg-sky-200 text-sky-900 text-[10px] font-black px-2.5 py-1 rounded-md">Soal 4 (Ubin Lantai)</span>
+                                    <span id="qstatus-4" class="text-xs font-bold text-slate-400">Belum dijawab</span>
+                                </div>
+                                <p class="text-xs sm:text-sm font-bold text-slate-800">
+                                    Lantai kamar berukuran <b>6 m × 4 m</b> akan dipasangi ubin karpet berukuran 1 m². Berapa banyak ubin yang dibutuhkan?
+                                </p>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <input type="number" id="input-q4" placeholder="Jawaban..." class="bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-purple-500 w-32">
+                                    <span class="text-xs font-bold text-slate-500">ubin</span>
+                                    <button onclick="checkPracticeAnswer(4, 24)" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition">
+                                        Jawab
+                                    </button>
+                                    <button onclick="toggleHint(4)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold px-3 py-2 rounded-xl transition">
+                                        💡 Petunjuk
+                                    </button>
+                                </div>
+                                <div id="hint-4" class="hidden bg-amber-50 border border-amber-300 p-2.5 rounded-xl text-xs text-amber-900">
+                                    💡 <b>Petunjuk:</b> Hitung luas total lantai (6 × 4).
+                                </div>
+                                <div id="feedback-4" class="hidden text-xs p-2.5 rounded-xl font-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SOAL 5 -->
+                    <div id="qcard-5" class="border-3 border-slate-200 rounded-3xl p-5 bg-slate-50 transition">
+                        <div class="flex flex-col md:flex-row gap-5 items-center">
+                            <!-- SVG Lapangan Basket -->
+                            <div class="w-32 h-24 bg-orange-400 rounded-2xl border-2 border-orange-600 p-2 shrink-0 flex items-center justify-center shadow-sm">
+                                <svg viewBox="0 0 100 60" class="w-full h-full">
+                                    <rect x="5" y="5" width="90" height="50" fill="none" stroke="white" stroke-width="2" rx="4"/>
+                                    <circle cx="50" cy="30" r="10" fill="none" stroke="white" stroke-width="2"/>
+                                    <text x="50" y="52" font-size="7" font-weight="bold" fill="white" text-anchor="middle">20m × 10m</text>
+                                </svg>
+                            </div>
+                            <div class="flex-grow space-y-3 w-full">
+                                <div class="flex justify-between items-center">
+                                    <span class="bg-orange-200 text-orange-950 text-[10px] font-black px-2.5 py-1 rounded-md">Soal 5 (Tantangan)</span>
+                                    <span id="qstatus-5" class="text-xs font-bold text-slate-400">Belum dijawab</span>
+                                </div>
+                                <p class="text-xs sm:text-sm font-bold text-slate-800">
+                                    Lapangan basket berukuran panjang <b>20 m</b> dan lebar <b>10 m</b>. Berapakah <b>selisih</b> antara **Luas** dan **Keliling** lapangan tersebut?
+                                </p>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    <input type="number" id="input-q5" placeholder="Jawaban..." class="bg-white border-2 border-slate-300 rounded-xl px-3 py-2 text-xs font-bold focus:outline-none focus:border-purple-500 w-32">
+                                    <span class="text-xs font-bold text-slate-500">selisih</span>
+                                    <button onclick="checkPracticeAnswer(5, 140)" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold px-4 py-2 rounded-xl shadow transition">
+                                        Jawab
+                                    </button>
+                                    <button onclick="toggleHint(5)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold px-3 py-2 rounded-xl transition">
+                                        💡 Petunjuk
+                                    </button>
+                                </div>
+                                <div id="hint-5" class="hidden bg-amber-50 border border-amber-300 p-2.5 rounded-xl text-xs text-amber-900">
+                                    💡 <b>Petunjuk:</b> <br>
+                                    1. Luas = 20 × 10 = 200 <br>
+                                    2. Keliling = 20 + 10 + 20 + 10 = 60 <br>
+                                    3. Selisih = 200 - 60
+                                </div>
+                                <div id="feedback-5" class="hidden text-xs p-2.5 rounded-xl font-bold"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- BANNER SELESAI -->
+            <div id="completion-banner" class="hidden bg-gradient-to-r from-emerald-400 to-teal-500 text-white rounded-3xl p-6 text-center space-y-3 shadow-xl">
+                <div class="text-5xl animate-bounce">🎉🏆🎉</div>
+                <h3 class="text-2xl font-black">Hebat Sekali, Teman-Teman!</h3>
+                <p class="text-xs text-emerald-100">Kamu telah menyelesaikan semua latihan luas bangun datar!</p>
+                <button onclick="resetAllProgress()" class="bg-white text-emerald-800 hover:bg-emerald-50 text-xs font-black px-6 py-2.5 rounded-xl transition shadow">
+                    Ulangi Pembelajaran 🔄
+                </button>
+            </div>
+
+            <div class="flex justify-between items-center">
+                <button onclick="switchTab('contoh')" class="text-slate-500 font-bold text-xs px-4 py-2">
+                    ⬅️ Kembali
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Data Soal Warmup
+        const warmupQuestions = [
+            { id: 1, label: "7 × 8 =", ans: 56 },
+            { id: 2, label: "12 × 5 =", ans: 60 },
+            { id: 3, label: "Keliling persegi (sisi 6 cm) =", ans: 24 },
+            { id: 4, label: "Keliling p. panjang (p=8, l=5) =", ans: 26 },
+            { id: 5, label: "15 × 4 =", ans: 60 },
+            { id: 6, label: "Keliling persegi (sisi 9 cm) =", ans: 36 },
+            { id: 7, label: "9 × 7 =", ans: 63 },
+            { id: 8, label: "Keliling p. panjang (p=10, l=4) =", ans: 28 }
+        ];
+
+        let warmupScores = new Array(warmupQuestions.length).fill(false);
+        let practiceScores = new Array(5).fill(false);
+        let currentVisMode = 'rectangle';
+
+        // Render UI Warmup
+        function initWarmupUI() {
+            const container = document.getElementById('warmup-container');
+            container.innerHTML = '';
+            
+            warmupQuestions.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = "bg-amber-50 border-2 border-amber-200 p-3 rounded-2xl flex items-center justify-between gap-2";
+                card.innerHTML = `
+                    <div class="flex items-center gap-2 w-full">
+                        <span class="w-6 h-6 rounded-xl bg-amber-400 text-white text-xs font-bold flex items-center justify-center shrink-0">${idx+1}</span>
+                        <label for="wu-${q.id}" class="text-xs font-bold text-slate-700 shrink-0">${q.label}</label>
+                        <input type="number" id="wu-${q.id}" class="bg-white border-2 border-amber-300 rounded-xl px-2 py-1 text-xs font-bold text-center w-20 ml-auto focus:outline-none focus:border-amber-500">
+                    </div>
+                    <span id="wu-status-${q.id}" class="text-xs font-bold hidden shrink-0"></span>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Tab Switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active');
+                el.classList.add('bg-white', 'text-slate-600');
+            });
+
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('bg-white', 'text-slate-600');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            updateGlobalProgress();
+        }
+
+        // Warmup Checking
+        function checkWarmUp() {
+            let correctCount = 0;
+            warmupQuestions.forEach((q, idx) => {
+                const input = document.getElementById(`wu-${q.id}`);
+                const statusSpan = document.getElementById(`wu-status-${q.id}`);
+                const val = parseInt(input.value);
+
+                if (val === q.ans) {
+                    correctCount++;
+                    warmupScores[idx] = true;
+                    statusSpan.className = "text-xs font-bold text-emerald-600";
+                    statusSpan.innerHTML = "✅";
+                    input.classList.add('border-emerald-500', 'bg-emerald-50');
+                } else {
+                    warmupScores[idx] = false;
+                    statusSpan.className = "text-xs font-bold text-rose-500";
+                    statusSpan.innerHTML = "❌";
+                    input.classList.add('border-rose-400', 'bg-rose-50');
+                }
+                statusSpan.classList.remove('hidden');
+            });
+
+            document.getElementById('warmup-score').textContent = `${correctCount} / 8 Soal`;
+            updateGlobalProgress();
+        }
+
+        // Mode Visualizer
+        function setVisualizerMode(mode) {
+            currentVisMode = mode;
+            const btnRect = document.getElementById('btn-mode-rect');
+            const btnSquare = document.getElementById('btn-mode-square');
+            const controlWidthGroup = document.getElementById('control-width-group');
+
+            if (mode === 'square') {
+                btnSquare.className = "px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-600 text-white shadow";
+                btnRect.className = "px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900";
+                controlWidthGroup.classList.add('hidden');
+            } else {
+                btnRect.className = "px-4 py-2 rounded-xl text-xs font-bold transition bg-purple-600 text-white shadow";
+                btnSquare.className = "px-4 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900";
+                controlWidthGroup.classList.remove('hidden');
+            }
+            updateVisualizer();
+        }
+
+        function updateVisualizer() {
+            const pVal = parseInt(document.getElementById('slider-p').value);
+            let lVal = parseInt(document.getElementById('slider-l').value);
+
+            if (currentVisMode === 'square') {
+                lVal = pVal;
+            }
+
+            document.getElementById('val-p').textContent = `${pVal} kotak`;
+            document.getElementById('val-l').textContent = `${lVal} kotak`;
+
+            const area = pVal * lVal;
+            if (currentVisMode === 'square') {
+                document.getElementById('vis-formula-str').textContent = `Perhitungan Persegi (Sisi × Sisi): ${pVal} × ${pVal}`;
+            } else {
+                document.getElementById('vis-formula-str').textContent = `Perhitungan (Panjang × Lebar): ${pVal} × ${lVal}`;
+            }
+            document.getElementById('vis-result-str').textContent = `Total Luas = ${area} Kotak`;
+
+            const gridCanvas = document.getElementById('grid-canvas');
+            gridCanvas.style.gridTemplateColumns = `repeat(${pVal}, minmax(0, 1fr))`;
+            gridCanvas.innerHTML = '';
+
+            for (let i = 0; i < area; i++) {
+                const cell = document.createElement('div');
+                cell.className = "w-7 h-7 sm:w-9 sm:h-9 bg-purple-200 border-2 border-purple-400 rounded-lg flex items-center justify-center text-[11px] font-black text-purple-700 grid-tile hover:bg-yellow-300 hover:text-yellow-950 cursor-pointer shadow-sm";
+                cell.textContent = i + 1;
+                gridCanvas.appendChild(cell);
+            }
+        }
+
+        // Toggle Pembahasan Contoh Soal
+        function toggleExplanation(id) {
+            const el = document.getElementById(id);
+            el.classList.toggle('hidden');
+        }
+
+        // Practice Hint & Checking
+        function toggleHint(qNum) {
+            const hintEl = document.getElementById(`hint-${qNum}`);
+            hintEl.classList.toggle('hidden');
+        }
+
+        function checkPracticeAnswer(qNum, targetAns) {
+            const input = document.getElementById(`input-q${qNum}`);
+            const feedback = document.getElementById(`feedback-${qNum}`);
+            const status = document.getElementById(`qstatus-${qNum}`);
+            const card = document.getElementById(`qcard-${qNum}`);
+            const val = parseInt(input.value);
+
+            feedback.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-900', 'bg-rose-100', 'text-rose-900');
+
+            if (val === targetAns) {
+                practiceScores[qNum - 1] = true;
+                feedback.classList.add('bg-emerald-100', 'text-emerald-900');
+                feedback.innerHTML = `🎉 <b>Hebat! Jawabanmu Tepat Sekali! (+100 Poin)</b>`;
+                status.className = "text-xs font-black text-emerald-600";
+                status.textContent = "Benar! ✨";
+                card.className = "border-3 border-emerald-400 rounded-3xl p-5 bg-emerald-50/50 transition";
+            } else {
+                practiceScores[qNum - 1] = false;
+                feedback.classList.add('bg-rose-100', 'text-rose-900');
+                feedback.innerHTML = `❌ Jawaban belum pas. Coba hitung lagi atau buka petunjuk ya!`;
+                status.className = "text-xs font-black text-rose-500";
+                status.textContent = "Coba Lagi";
+                card.className = "border-3 border-rose-300 rounded-3xl p-5 bg-rose-50/40 transition";
+            }
+
+            updatePracticeScore();
+            updateGlobalProgress();
+        }
+
+        function updatePracticeScore() {
+            const correctTotal = practiceScores.filter(Boolean).length;
+            const score = correctTotal * 100;
+            document.getElementById('practice-score').textContent = `${score} / 500 Poin`;
+
+            if (correctTotal === 5) {
+                document.getElementById('completion-banner').classList.remove('hidden');
+            }
+        }
+
+        function updateGlobalProgress() {
+            const wuDone = warmupScores.filter(Boolean).length / warmupQuestions.length;
+            const pracDone = practiceScores.filter(Boolean).length / 5;
+
+            const totalPercent = Math.round((wuDone * 40) + (pracDone * 60));
+
+            const progressBar = document.getElementById('module-progress');
+            const progressText = document.getElementById('module-progress-text');
+
+            progressBar.style.width = `${totalPercent}%`;
+            progressText.textContent = `${totalPercent}% Selesai`;
+        }
+
+        function resetAllProgress() {
+            warmupScores.fill(false);
+            practiceScores.fill(false);
+            
+            initWarmupUI();
+            
+            for(let i=1; i<=5; i++) {
+                document.getElementById(`input-q${i}`).value = '';
+                document.getElementById(`feedback-${i}`).classList.add('hidden');
+                document.getElementById(`hint-${i}`).classList.add('hidden');
+                document.getElementById(`qstatus-${i}`).className = "text-xs font-bold text-slate-400";
+                document.getElementById(`qstatus-${i}`).textContent = "Belum dijawab";
+                document.getElementById(`qcard-${i}`).className = "border-3 border-slate-200 rounded-3xl p-5 bg-slate-50 transition";
+            }
+
+            document.getElementById('completion-banner').classList.add('hidden');
+            document.getElementById('warmup-score').textContent = `0 / 8 Soal`;
+            document.getElementById('practice-score').textContent = `0 / 500 Poin`;
+
+            switchTab('tujuan');
+        }
+
+        window.onload = function() {
+            initWarmupUI();
+            updateVisualizer();
+            updateGlobalProgress();
+        };
+    </script>
+</body>
+</html>
