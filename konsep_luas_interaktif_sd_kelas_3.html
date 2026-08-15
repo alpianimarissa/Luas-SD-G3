@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Konsep Luas - Kelas 3 SD</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandYellow: '#FFD166',
+                        brandPink: '#FF6B6B',
+                        brandGreen: '#06D6A0',
+                        brandBlue: '#118AB2',
+                        brandDark: '#073B4C',
+                        brandPurple: '#8338EC'
+                    },
+                    fontFamily: {
+                        sans: ['Comic Sans MS', 'Chalkboard SE', 'Fredoka', 'Quicksand', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Canvas Confetti for Celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .bounce-hover:hover {
+            transform: translateY(-4px);
+            transition: all 0.2s ease;
+        }
+        .grid-tile {
+            transition: all 0.3s ease;
+        }
+        .grid-tile:hover {
+            background-color: #FFD166 !important;
+            transform: scale(1.08);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-amber-50 text-slate-800 font-sans min-h-screen pb-16">
+
+    <!-- HEADER NAVBAR -->
+    <header class="bg-gradient-to-r from-brandPink via-brandPurple to-brandBlue text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+                <span class="text-4xl">📐</span>
+                <div>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-wide">Petualangan Belajar Luas</h1>
+                    <p class="text-amber-200 text-xs sm:text-sm">Matematika Seru Interaktif - Kelas 3 SD</p>
+                </div>
+            </div>
+            <div class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-xs font-semibold flex items-center gap-2 border border-white/30">
+                <span>🌟 Level: Detektif Luas</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-4xl mx-auto px-4 mt-8 space-y-10">
+
+        <!-- SECTION 1: TUJUAN PEMBELAJARAN -->
+        <section class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-brandYellow relative overflow-hidden">
+            <div class="absolute -right-6 -bottom-6 opacity-10 text-9xl pointer-events-none">🎯</div>
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-brandYellow text-brandDark p-3 rounded-2xl text-2xl font-bold">🎯</span>
+                <h2 class="text-2xl font-black text-brandDark">1. Tujuan Pembelajaran</h2>
+            </div>
+            <p class="text-gray-600 mb-4 text-base sm:text-lg">Halo Sahabat Cerdas! Setelah menyelesaikan petualangan seru ini, kamu pasti mampu:</p>
+            <div class="grid sm:grid-cols-2 gap-4">
+                <div class="bg-amber-50 p-4 rounded-2xl border-2 border-amber-200 flex items-start gap-3">
+                    <span class="text-2xl">✅</span>
+                    <p class="text-sm sm:text-base text-slate-700 font-medium">Memahami <b>konsep luas</b> sebagai besarnya permukaan di dalam bangun datar.</p>
+                </div>
+                <div class="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-200 flex items-start gap-3">
+                    <span class="text-2xl">✅</span>
+                    <p class="text-sm sm:text-base text-slate-700 font-medium">Membedakan dengan jelas antara <b>Keliling</b> (garis tepi) dan <b>Luas</b> (isi permukaan).</p>
+                </div>
+                <div class="bg-cyan-50 p-4 rounded-2xl border-2 border-cyan-200 flex items-start gap-3">
+                    <span class="text-2xl">✅</span>
+                    <p class="text-sm sm:text-base text-slate-700 font-medium">Menghitung luas bangun datar menggunakan <b>petak satuan</b>.</p>
+                </div>
+                <div class="bg-purple-50 p-4 rounded-2xl border-2 border-purple-200 flex items-start gap-3">
+                    <span class="text-2xl">✅</span>
+                    <p class="text-sm sm:text-base text-slate-700 font-medium">Menghitung <b>Luas Persegi</b> dan <b>Persegi Panjang</b> memakai rumus perkalian.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: WARM-UP (8 SOAL) -->
+        <section class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-brandPink relative">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-brandPink text-white p-3 rounded-2xl text-2xl font-bold">🔥</span>
+                <div>
+                    <h2 class="text-2xl font-black text-brandDark">2. Warm-Up (Pemanasan Otak)</h2>
+                    <p class="text-xs sm:text-sm text-gray-500">Ingat kembali materi perkalian dan keliling sebelum masuk ke materi luas!</p>
+                </div>
+            </div>
+
+            <form id="warmupForm" class="grid sm:grid-cols-2 gap-4 my-6">
+                <!-- Soal 1-4: Perkalian -->
+                <div class="bg-rose-50 p-4 rounded-2xl border-2 border-rose-200 flex items-center justify-between">
+                    <label for="w1" class="font-bold text-slate-700">1. &nbsp; 4 × 5 =</label>
+                    <input type="number" id="w1" class="w-20 p-2 text-center rounded-xl border-2 border-rose-400 font-extrabold text-brandDark focus:outline-none focus:ring-2 focus:ring-brandPink" placeholder="?">
+                </div>
+                <div class="bg-rose-50 p-4 rounded-2xl border-2 border-rose-200 flex items-center justify-between">
+                    <label for="w2" class="font-bold text-slate-700">2. &nbsp; 6 × 3 =</label>
+                    <input type="number" id="w2" class="w-20 p-2 text-center rounded-xl border-2 border-rose-400 font-extrabold text-brandDark focus:outline-none focus:ring-2 focus:ring-brandPink" placeholder="?">
+                </div>
+                <div class="bg-rose-50 p-4 rounded-2xl border-2 border-rose-200 flex items-center justify-between">
+                    <label for="w3" class="font-bold text-slate-700">3. &nbsp; 7 × 4 =</label>
+                    <input type="number" id="w3" class="w-20 p-2 text-center rounded-xl border-2 border-rose-400 font-extrabold text-brandDark focus:outline-none focus:ring-2 focus:ring-brandPink" placeholder="?">
+                </div>
+                <div class="bg-rose-50 p-4 rounded-2xl border-2 border-rose-200 flex items-center justify-between">
+                    <label for="w4" class="font-bold text-slate-700">4. &nbsp; 8 × 5 =</label>
+                    <input type="number" id="w4" class="w-20 p-2 text-center rounded-xl border-2 border-rose-400 font-extrabold text-brandDark focus:outline-none focus:ring-2 focus:ring-brandPink" placeholder="?">
+                </div>
+
+                <!-- Soal 5-8: Keliling -->
+                <div class="bg-sky-50 p-4 rounded-2xl border-2 border-sky-200 flex flex-col gap-2">
+                    <label for="w5" class="text-sm font-bold text-slate-700">5. Keliling Persegi (s = 4 cm):</label>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="w5" class="w-full p-2 text-center rounded-xl border-2 border-sky-400 font-extrabold text-brandDark focus:outline-none focus:ring-2 focus:ring-brandBlue" placeholder="Jawab">
+                        <span class="font-bold text-slate-500">cm</span>
+                    </div>
+                </div>
+                <div class="bg-sky-50 p-4 rounded-2xl border-2 border-sky-200 flex flex-col gap-2">
+                    <label for="w6" class="text-sm font-bold text-slate-700">6. Keliling Persegi (s = 6 cm):</label>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="w6" class="w-full p-2 text-center rounded-xl border-2 border-sky-400 font-extrabold text-brandDark focus:outline-none focus:ring-2 focus:ring-brandBlue" placeholder="Jawab">
+                        <span class="font-bold text-slate-500">cm</span>
+                    </div>
+                </div>
+                <div class="bg-sky-50 p-4 rounded-2xl border-2 border-sky-200 flex flex-col gap-2">
+                    <label for="w7" class="text-sm font-bold text-slate-700">7. Keliling P. Panjang (p=5, l=3):</label>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="w7" class="w-full p-2 text-center rounded-xl border-2 border-sky-400 font-extrabold text-brandDark focus:outline-none focus:ring-2 focus:ring-brandBlue" placeholder="Jawab">
+                        <span class="font-bold text-slate-500">cm</span>
+                    </div>
+                </div>
+                <div class="bg-sky-50 p-4 rounded-2xl border-2 border-sky-200 flex flex-col gap-2">
+                    <label for="w8" class="text-sm font-bold text-slate-700">8. Keliling P. Panjang (p=7, l=2):</label>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="w8" class="w-full p-2 text-center rounded-xl border-2 border-sky-400 font-extrabold text-brandDark focus:outline-none focus:ring-2 focus:ring-brandBlue" placeholder="Jawab">
+                        <span class="font-bold text-slate-500">cm</span>
+                    </div>
+                </div>
+            </form>
+
+            <div class="text-center mt-6">
+                <button type="button" onclick="checkWarmup()" class="bg-brandPink hover:bg-rose-600 text-white font-extrabold px-8 py-3 rounded-2xl shadow-md transition transform active:scale-95 text-lg inline-flex items-center gap-2">
+                    <span>🔍 Periksa Jawaban Pemanasan</span>
+                </button>
+                <div id="warmupFeedback" class="mt-4 p-4 rounded-2xl font-bold hidden text-center transition-all"></div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: KONEKSI NYATA (Dunia Sekitar) -->
+        <section class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-brandGreen">
+            <div class="flex items-center gap-3 mb-4">
+                <span class="bg-brandGreen text-white p-3 rounded-2xl text-2xl font-bold">🌍</span>
+                <h2 class="text-2xl font-black text-brandDark">3. Koneksi Nyata (Di Sekitar Kita)</h2>
+            </div>
+            <p class="text-gray-600 mb-6 text-base sm:text-lg">Mengapa kita perlu belajar konsep <b>luas</b>? Mari lihat contohnya dalam kehidupan sehari-hari!</p>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-emerald-50 rounded-2xl p-5 border-2 border-emerald-200 text-center flex flex-col items-center bounce-hover">
+                    <div class="w-20 h-20 mb-3 flex items-center justify-center bg-white rounded-2xl shadow-md">
+                        <svg class="w-14 h-14" viewBox="0 0 100 100">
+                            <!-- Floor Tiles SVG -->
+                            <rect x="10" y="10" width="38" height="38" fill="#A7F3D0" stroke="#059669" stroke-width="3" rx="4"/>
+                            <rect x="52" y="10" width="38" height="38" fill="#6EE7B7" stroke="#059669" stroke-width="3" rx="4"/>
+                            <rect x="10" y="52" width="38" height="38" fill="#6EE7B7" stroke="#059669" stroke-width="3" rx="4"/>
+                            <rect x="52" y="52" width="38" height="38" fill="#A7F3D0" stroke="#059669" stroke-width="3" rx="4"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-extrabold text-emerald-900 text-lg mb-1">Memasang Ubin Lantai</h3>
+                    <p class="text-xs text-emerald-700">Tukang bangunan perlu menghitung <b>luas lantai</b> kamar agar tahu berapa kotak ubin keramik yang harus dibeli.</p>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="bg-amber-50 rounded-2xl p-5 border-2 border-amber-200 text-center flex flex-col items-center bounce-hover">
+                    <div class="w-20 h-20 mb-3 flex items-center justify-center bg-white rounded-2xl shadow-md">
+                        <svg class="w-14 h-14" viewBox="0 0 100 100">
+                            <!-- Chocolate Bar SVG -->
+                            <rect x="15" y="20" width="70" height="60" fill="#78350F" rx="6"/>
+                            <rect x="20" y="25" width="18" height="23" fill="#92400E" rx="3"/>
+                            <rect x="41" y="25" width="18" height="23" fill="#92400E" rx="3"/>
+                            <rect x="62" y="25" width="18" height="23" fill="#92400E" rx="3"/>
+                            <rect x="20" y="52" width="18" height="23" fill="#92400E" rx="3"/>
+                            <rect x="41" y="52" width="18" height="23" fill="#92400E" rx="3"/>
+                            <rect x="62" y="52" width="18" height="23" fill="#92400E" rx="3"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-extrabold text-amber-900 text-lg mb-1">Cokelat Batangan</h3>
+                    <p class="text-xs text-amber-700">Saat kamu membagi cokelat, jumlah seluruh kotak-kotak cokelat di dalam bungkusnya adalah gambaran <b>luas permukaan</b> cokelat!</p>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="bg-sky-50 rounded-2xl p-5 border-2 border-sky-200 text-center flex flex-col items-center bounce-hover">
+                    <div class="w-20 h-20 mb-3 flex items-center justify-center bg-white rounded-2xl shadow-md">
+                        <svg class="w-14 h-14" viewBox="0 0 100 100">
+                            <!-- Garden Field SVG -->
+                            <rect x="15" y="20" width="70" height="60" fill="#86EFAC" stroke="#166534" stroke-width="4" rx="4"/>
+                            <!-- Flower dots -->
+                            <circle cx="30" cy="40" r="5" fill="#F43F5E"/>
+                            <circle cx="50" cy="60" r="5" fill="#FBBF24"/>
+                            <circle cx="70" cy="35" r="5" fill="#A855F7"/>
+                            <circle cx="60" cy="50" r="4" fill="#F43F5E"/>
+                        </svg>
+                    </div>
+                    <h3 class="font-extrabold text-sky-900 text-lg mb-1">Menanam Rumput Taman</h3>
+                    <p class="text-xs text-sky-700">Pagar di sekeliling taman adalah <b>Keliling</b>. Sedangkan rumput hijau yang menutupi seluruh tanah di dalamnya adalah <b>Luas</b>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: MATERI LENGKAP & KONSEP -->
+        <section class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-brandBlue">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-brandBlue text-white p-3 rounded-2xl text-2xl font-bold">📖</span>
+                <div>
+                    <h2 class="text-2xl font-black text-brandDark">4. Konsep & Materi Lengkap</h2>
+                    <p class="text-xs sm:text-sm text-gray-500">Pahami konsep dasar luas secara mendalam di sini!</p>
+                </div>
+            </div>
+
+            <!-- SUB-SECTION A: Keliling vs Luas -->
+            <div class="bg-blue-50/70 p-6 rounded-2xl border-2 border-blue-200 mb-8">
+                <h3 class="text-xl font-black text-brandBlue mb-3 flex items-center gap-2">
+                    <span>🔍</span> A. Bedanya Keliling dan Luas
+                </h3>
+                <p class="text-slate-700 mb-4 text-sm sm:text-base leading-relaxed">
+                    Banyak teman-teman yang masih bingung antara keliling dan luas. Yuk kita bedakan dengan mudah:
+                </p>
+
+                <div class="grid md:grid-cols-2 gap-6 items-center">
+                    <!-- SVG Visual Comparison -->
+                    <div class="bg-white p-4 rounded-xl shadow-inner border border-blue-200 text-center">
+                        <svg class="w-full h-48 mx-auto" viewBox="0 0 300 180">
+                            <!-- Background shape -->
+                            <rect x="40" y="30" width="220" height="120" fill="#BBF7D0" stroke="#22C55E" stroke-width="6" stroke-dasharray="10 5" rx="8"/>
+                            
+                            <!-- Inside Fill Label (LUAS) -->
+                            <rect x="70" y="55" width="160" height="70" fill="#22C55E" opacity="0.2" rx="6"/>
+                            <text x="150" y="95" text-anchor="middle" font-size="18" font-weight="900" fill="#15803D">LUAS (Permukaan)</text>
+                            <text x="150" y="115" text-anchor="middle" font-size="12" font-weight="bold" fill="#166534">Daerah hijau di dalam</text>
+
+                            <!-- Outer Border Arrows (KELILING) -->
+                            <path d="M 30 20 L 270 20 L 270 160 L 30 160 Z" fill="none" stroke="#EF4444" stroke-width="3"/>
+                            <text x="150" y="15" text-anchor="middle" font-size="13" font-weight="900" fill="#DC2626">⬅ KELILING (Garis Pagar Tepi) ➡</text>
+                        </svg>
+                    </div>
+
+                    <div class="space-y-3">
+                        <div class="bg-red-50 p-3 rounded-xl border border-red-200 flex items-center gap-3">
+                            <span class="text-2xl">🚨</span>
+                            <div>
+                                <h4 class="font-extrabold text-red-800 text-sm sm:text-base">KELILING:</h4>
+                                <p class="text-xs sm:text-sm text-red-700">Jumlah panjang <b>garis tepi/pagar</b> yang mengelilingi bangun datar.</p>
+                            </div>
+                        </div>
+                        <div class="bg-green-50 p-3 rounded-xl border border-green-200 flex items-center gap-3">
+                            <span class="text-2xl">🟩</span>
+                            <div>
+                                <h4 class="font-extrabold text-green-800 text-sm sm:text-base">LUAS:</h4>
+                                <p class="text-xs sm:text-sm text-green-700">Besarnya <b>daerah permukaan/isi</b> bagian dalam yang tertutup oleh garis tepi.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUB-SECTION B: Simulator Petak Satuan Interaktif -->
+            <div class="bg-amber-50/80 p-6 rounded-2xl border-2 border-amber-300 mb-8">
+                <h3 class="text-xl font-black text-amber-900 mb-2 flex items-center gap-2">
+                    <span>🧮</span> B. Laboratorium Petak Satuan Interaktif
+                </h3>
+                <p class="text-xs sm:text-sm text-amber-800 mb-4">
+                    Geser slider di bawah untuk mengukur daerah luas dengan menghitung kotak kecil (petak satuan)!
+                </p>
+
+                <!-- Controls -->
+                <div class="grid sm:grid-cols-2 gap-4 bg-white p-4 rounded-xl border border-amber-200 mb-4">
+                    <div>
+                        <label for="sliderPanjang" class="text-xs sm:text-sm font-extrabold text-slate-700 flex justify-between">
+                            <span>Panjang (p): <span id="valPanjang" class="text-brandPink text-base font-black">4</span> petak</span>
+                        </label>
+                        <input type="range" id="sliderPanjang" min="1" max="6" value="4" class="w-full accent-brandPink cursor-pointer" oninput="updateGridInteractive()">
+                    </div>
+                    <div>
+                        <label for="sliderLebar" class="text-xs sm:text-sm font-extrabold text-slate-700 flex justify-between">
+                            <span>Lebar (l): <span id="valLebar" class="text-brandBlue text-base font-black">3</span> petak</span>
+                        </label>
+                        <input type="range" id="sliderLebar" min="1" max="6" value="3" class="w-full accent-brandBlue cursor-pointer" oninput="updateGridInteractive()">
+                    </div>
+                </div>
+
+                <!-- Dynamic Grid Render Canvas -->
+                <div class="bg-white p-6 rounded-2xl border-2 border-amber-300 shadow-md flex flex-col items-center justify-center">
+                    <div id="interactiveGridContainer" class="grid gap-1 bg-slate-800 p-2 rounded-xl">
+                        <!-- Grid cells injected via JS -->
+                    </div>
+
+                    <!-- Live Calculation Note -->
+                    <div class="mt-4 text-center bg-amber-100 px-6 py-3 rounded-xl border border-amber-300 w-full max-w-md">
+                        <p class="text-xs sm:text-sm text-amber-900 font-bold">
+                            Total Petak = Baris × Kolom = <span id="calcRows" class="text-brandBlue">3</span> × <span id="calcCols" class="text-brandPink">4</span> = <span id="calcTotal" class="text-2xl font-black text-brandPurple">12</span> Petak Satuan
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUB-SECTION C: Rumus Persegi & Persegi Panjang -->
+            <div class="space-y-6">
+                <h3 class="text-xl font-black text-brandDark flex items-center gap-2">
+                    <span>📐</span> C. Rumus Luas Bangun Datar
+                </h3>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Card Rumus Persegi Panjang -->
+                    <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-5 rounded-2xl border-2 border-indigo-200 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-indigo-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Persegi Panjang</span>
+                            <h4 class="text-lg font-black text-indigo-950 mt-2 mb-2">Luas Persegi Panjang</h4>
+                            <p class="text-xs text-slate-600 mb-3">Memiliki sisi **Panjang (p)** dan sisi **Lebar (l)** yang berbeda ukuran.</p>
+                            
+                            <!-- Illustration SVG -->
+                            <div class="bg-white p-3 rounded-xl border border-indigo-100 flex justify-center mb-4">
+                                <svg class="w-48 h-28" viewBox="0 0 200 110">
+                                    <rect x="25" y="20" width="150" height="70" fill="#E0E7FF" stroke="#4F46E5" stroke-width="4" rx="6"/>
+                                    <!-- Top label (p) -->
+                                    <text x="100" y="15" text-anchor="middle" font-size="12" font-weight="bold" fill="#4F46E5">Panjang (p)</text>
+                                    <!-- Right label (l) -->
+                                    <text x="185" y="60" text-anchor="start" font-size="12" font-weight="bold" fill="#0284C7">Lebar (l)</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="bg-indigo-600 text-white p-4 rounded-xl text-center shadow-md">
+                            <p class="text-xs opacity-90">Rumus Luas Persegi Panjang:</p>
+                            <p class="text-xl font-black tracking-wider">Luas = p × l</p>
+                        </div>
+                    </div>
+
+                    <!-- Card Rumus Persegi -->
+                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 p-5 rounded-2xl border-2 border-emerald-200 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-emerald-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Persegi</span>
+                            <h4 class="text-lg font-black text-emerald-950 mt-2 mb-2">Luas Persegi (Bujur Sangkar)</h4>
+                            <p class="text-xs text-slate-600 mb-3">Semua 4 sisinya memiliki **ukuran sama panjang** yang disebut **Sisi (s)**.</p>
+                            
+                            <!-- Illustration SVG -->
+                            <div class="bg-white p-3 rounded-xl border border-emerald-100 flex justify-center mb-4">
+                                <svg class="w-48 h-28" viewBox="0 0 200 110">
+                                    <rect x="65" y="15" width="80" height="80" fill="#D1FAE5" stroke="#059669" stroke-width="4" rx="6"/>
+                                    <!-- Top label (s) -->
+                                    <text x="105" y="10" text-anchor="middle" font-size="12" font-weight="bold" fill="#059669">Sisi (s)</text>
+                                    <!-- Right label (s) -->
+                                    <text x="153" y="60" text-anchor="start" font-size="12" font-weight="bold" fill="#059669">Sisi (s)</text>
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="bg-emerald-600 text-white p-4 rounded-xl text-center shadow-md">
+                            <p class="text-xs opacity-90">Rumus Luas Persegi:</p>
+                            <p class="text-xl font-black tracking-wider">Luas = s × s</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-amber-100 border-l-4 border-amber-500 p-4 rounded-r-xl text-xs sm:text-sm text-amber-900">
+                    <b>💡 Catatan Satuan Luas:</b> Jika panjang menggunakan cm (sentimeter), maka satuan luas ditulis <b>cm²</b> (dibaca: sentimeter persegi). Jika menggunakan m (meter), luas ditulis <b>m²</b> (meter persegi).
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: CONTOH SOAL & PEMBAHASAN -->
+        <section class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-brandPurple">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-brandPurple text-white p-3 rounded-2xl text-2xl font-bold">💡</span>
+                <div>
+                    <h2 class="text-2xl font-black text-brandDark">5. Contoh Soal & Pembahasan</h2>
+                    <p class="text-xs sm:text-sm text-gray-500">Pelajari cara menyelesaikan soal cerita secara terstruktur!</p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Contoh 1: Persegi Panjang -->
+                <div class="bg-purple-50 p-5 rounded-2xl border-2 border-purple-200">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="bg-brandPurple text-white text-xs px-3 py-1 rounded-full font-bold">Contoh 1</span>
+                        <h3 class="font-extrabold text-slate-800 text-base sm:text-lg">Luas Papan Tulis Kelas</h3>
+                    </div>
+                    <p class="text-slate-700 text-sm sm:text-base mb-4">
+                        Papan tulis di kelas 3 SD berbentuk persegi panjang. Panjangnya adalah <b>8 meter</b> dan lebarnya <b>3 meter</b>. Berapakah luas papan tulis tersebut?
+                    </p>
+
+                    <div class="bg-white p-4 rounded-xl border border-purple-200 grid sm:grid-cols-3 gap-4 items-center">
+                        <!-- SVG Illustration -->
+                        <div class="flex justify-center">
+                            <svg class="w-40 h-24" viewBox="0 0 160 90">
+                                <rect x="10" y="15" width="140" height="60" fill="#064E3B" stroke="#78350F" stroke-width="5" rx="4"/>
+                                <text x="80" y="48" text-anchor="middle" font-size="12" font-weight="bold" fill="#FFFFFF">Papan Tulis</text>
+                                <text x="80" y="10" text-anchor="middle" font-size="10" font-weight="bold" fill="#1E293B">p = 8 m</text>
+                                <text x="155" y="50" text-anchor="start" font-size="10" font-weight="bold" fill="#1E293B">l = 3 m</text>
+                            </svg>
+                        </div>
+                        <!-- Steps -->
+                        <div class="sm:col-span-2 space-y-2 text-xs sm:text-sm">
+                            <p class="text-gray-600"><b>Diketahui:</b> Panjang (p) = 8 m, Lebar (l) = 3 m</p>
+                            <p class="text-gray-600"><b>Ditanyakan:</b> Luas papan tulis?</p>
+                            <div class="bg-purple-100 p-3 rounded-lg border border-purple-300">
+                                <p class="font-bold text-brandPurple">Jawab:</p>
+                                <p class="font-bold text-slate-800">Luas = p × l</p>
+                                <p class="font-bold text-slate-800">Luas = 8 m × 3 m = <span class="text-brandPink text-lg">24 m²</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contoh 2: Persegi -->
+                <div class="bg-teal-50 p-5 rounded-2xl border-2 border-teal-200">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="bg-teal-600 text-white text-xs px-3 py-1 rounded-full font-bold">Contoh 2</span>
+                        <h3 class="font-extrabold text-slate-800 text-base sm:text-lg">Luas Kertas Lipat Origami</h3>
+                    </div>
+                    <p class="text-slate-700 text-sm sm:text-base mb-4">
+                        Ayu memiliki kertas lipat berbentuk persegi dengan panjang sisi <b>6 cm</b>. Berapakah luas permukaan kertas lipat tersebut?
+                    </p>
+
+                    <div class="bg-white p-4 rounded-xl border border-teal-200 grid sm:grid-cols-3 gap-4 items-center">
+                        <!-- SVG Illustration -->
+                        <div class="flex justify-center">
+                            <svg class="w-32 h-32" viewBox="0 0 120 120">
+                                <rect x="20" y="20" width="80" height="80" fill="#F472B6" stroke="#DB2777" stroke-width="4" rx="4"/>
+                                <text x="60" y="65" text-anchor="middle" font-size="11" font-weight="bold" fill="#FFFFFF">Origami</text>
+                                <text x="60" y="14" text-anchor="middle" font-size="10" font-weight="bold" fill="#831843">s = 6 cm</text>
+                                <text x="105" y="65" text-anchor="start" font-size="10" font-weight="bold" fill="#831843">s = 6 cm</text>
+                            </svg>
+                        </div>
+                        <!-- Steps -->
+                        <div class="sm:col-span-2 space-y-2 text-xs sm:text-sm">
+                            <p class="text-gray-600"><b>Diketahui:</b> Sisi (s) = 6 cm</p>
+                            <p class="text-gray-600"><b>Ditanyakan:</b> Luas kertas lipat?</p>
+                            <div class="bg-teal-100 p-3 rounded-lg border border-teal-300">
+                                <p class="font-bold text-teal-800">Jawab:</p>
+                                <p class="font-bold text-slate-800">Luas = s × s</p>
+                                <p class="font-bold text-slate-800">Luas = 6 cm × 6 cm = <span class="text-teal-700 text-lg">36 cm²</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: LATIHAN TERBIMBING (5 SOAL) -->
+        <section class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-brandYellow">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="bg-brandYellow text-brandDark p-3 rounded-2xl text-2xl font-bold">✏️</span>
+                <div>
+                    <h2 class="text-2xl font-black text-brandDark">6. Latihan Terbimbing (5 Soal)</h2>
+                    <p class="text-xs sm:text-sm text-gray-500">Saatnya menguji pemahamanmu! Kerjakan 5 soal di bawah ini.</p>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <!-- SOAL 1 -->
+                <div class="bg-amber-50 p-5 rounded-2xl border-2 border-amber-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-black text-amber-900 text-base sm:text-lg">Soal 1: Hitung Petak Satuan</span>
+                        <span class="text-xs bg-amber-200 text-amber-900 px-3 py-1 rounded-full font-bold">Grid Petak</span>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-4">
+                        Hitunglah luas persegi panjang di bawah ini berdasarkan jumlah petak satuannya!
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center gap-6 bg-white p-4 rounded-xl border border-amber-200">
+                        <!-- SVG Grid Question 1 -->
+                        <svg class="w-48 h-28" viewBox="0 0 160 90">
+                            <!-- 5 columns x 3 rows grid -->
+                            <g fill="#FDE047" stroke="#CA8A04" stroke-width="2">
+                                <!-- Row 1 -->
+                                <rect x="5" y="5" width="28" height="25"/><rect x="35" y="5" width="28" height="25"/><rect x="65" y="5" width="28" height="25"/><rect x="95" y="5" width="28" height="25"/><rect x="125" y="5" width="28" height="25"/>
+                                <!-- Row 2 -->
+                                <rect x="5" y="32" width="28" height="25"/><rect x="35" y="32" width="28" height="25"/><rect x="65" y="32" width="28" height="25"/><rect x="95" y="32" width="28" height="25"/><rect x="125" y="32" width="28" height="25"/>
+                                <!-- Row 3 -->
+                                <rect x="5" y="59" width="28" height="25"/><rect x="35" y="59" width="28" height="25"/><rect x="65" y="59" width="28" height="25"/><rect x="95" y="59" width="28" height="25"/><rect x="125" y="59" width="28" height="25"/>
+                            </g>
+                        </svg>
+
+                        <div class="flex-1 space-y-3 w-full">
+                            <p class="text-xs text-slate-600">Ada <b>3 baris</b> dan <b>5 kolom</b> petak.</p>
+                            <div class="flex items-center gap-2">
+                                <label for="ans1" class="font-bold text-sm text-slate-700">Luas =</label>
+                                <input type="number" id="ans1" class="w-24 p-2 text-center rounded-xl border-2 border-amber-400 font-extrabold text-brandDark focus:outline-none" placeholder="?">
+                                <span class="font-bold text-sm text-slate-600">petak satuan</span>
+                            </div>
+                            <button type="button" onclick="checkGuided(1, 15)" class="bg-amber-500 hover:bg-amber-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                                Cek Jawaban 1
+                            </button>
+                            <div id="feedback1" class="text-xs font-bold hidden"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOAL 2 -->
+                <div class="bg-sky-50 p-5 rounded-2xl border-2 border-sky-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-black text-sky-900 text-base sm:text-lg">Soal 2: Luas Ubin Persegi</span>
+                        <span class="text-xs bg-sky-200 text-sky-900 px-3 py-1 rounded-full font-bold">Persegi</span>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-4">
+                        Sebuah keramik lantai berbentuk persegi memiliki panjang sisi <b>7 cm</b>. Berapakah luas keramik tersebut?
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center gap-6 bg-white p-4 rounded-xl border border-sky-200">
+                        <svg class="w-28 h-28" viewBox="0 0 100 100">
+                            <rect x="10" y="10" width="80" height="80" fill="#BAE6FD" stroke="#0284C7" stroke-width="4" rx="6"/>
+                            <text x="50" y="55" text-anchor="middle" font-size="12" font-weight="extrabold" fill="#0369A1">s = 7 cm</text>
+                        </svg>
+
+                        <div class="flex-1 space-y-3 w-full">
+                            <div class="flex items-center gap-2">
+                                <label for="ans2" class="font-bold text-sm text-slate-700">Luas =</label>
+                                <input type="number" id="ans2" class="w-24 p-2 text-center rounded-xl border-2 border-sky-400 font-extrabold text-brandDark focus:outline-none" placeholder="?">
+                                <span class="font-bold text-sm text-slate-600">cm²</span>
+                            </div>
+                            <button type="button" onclick="checkGuided(2, 49)" class="bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                                Cek Jawaban 2
+                            </button>
+                            <div id="feedback2" class="text-xs font-bold hidden"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOAL 3 -->
+                <div class="bg-rose-50 p-5 rounded-2xl border-2 border-rose-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-black text-rose-900 text-base sm:text-lg">Soal 3: Karpet Karakter</span>
+                        <span class="text-xs bg-rose-200 text-rose-900 px-3 py-1 rounded-full font-bold">Persegi Panjang</span>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-4">
+                        Karpet kamar Budi berbentuk persegi panjang dengan <b>panjang = 9 meter</b> dan <b>lebar = 4 meter</b>. Berapakah luas karpet kamar Budi?
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center gap-6 bg-white p-4 rounded-xl border border-rose-200">
+                        <svg class="w-40 h-24" viewBox="0 0 160 90">
+                            <rect x="10" y="15" width="140" height="60" fill="#FECDD3" stroke="#E11D48" stroke-width="4" rx="6"/>
+                            <text x="80" y="45" text-anchor="middle" font-size="11" font-weight="bold" fill="#9F1239">Karpet (9m x 4m)</text>
+                        </svg>
+
+                        <div class="flex-1 space-y-3 w-full">
+                            <div class="flex items-center gap-2">
+                                <label for="ans3" class="font-bold text-sm text-slate-700">Luas =</label>
+                                <input type="number" id="ans3" class="w-24 p-2 text-center rounded-xl border-2 border-rose-400 font-extrabold text-brandDark focus:outline-none" placeholder="?">
+                                <span class="font-bold text-sm text-slate-600">m²</span>
+                            </div>
+                            <button type="button" onclick="checkGuided(3, 36)" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                                Cek Jawaban 3
+                            </button>
+                            <div id="feedback3" class="text-xs font-bold hidden"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOAL 4 -->
+                <div class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-black text-emerald-900 text-base sm:text-lg">Soal 4: Meja Belajar Sederhana</span>
+                        <span class="text-xs bg-emerald-200 text-emerald-900 px-3 py-1 rounded-full font-bold">Persegi Panjang</span>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-4">
+                        Permukaan meja belajar milik Sisi berbentuk persegi panjang. Memiliki <b>panjang 10 cm</b> dan <b>lebar 6 cm</b>. Berapakah luas permukaan meja tersebut?
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center gap-6 bg-white p-4 rounded-xl border border-emerald-200">
+                        <svg class="w-40 h-24" viewBox="0 0 160 90">
+                            <rect x="10" y="15" width="140" height="60" fill="#A7F3D0" stroke="#059669" stroke-width="4" rx="6"/>
+                            <text x="80" y="48" text-anchor="middle" font-size="11" font-weight="bold" fill="#065F46">Meja (10 cm x 6 cm)</text>
+                        </svg>
+
+                        <div class="flex-1 space-y-3 w-full">
+                            <div class="flex items-center gap-2">
+                                <label for="ans4" class="font-bold text-sm text-slate-700">Luas =</label>
+                                <input type="number" id="ans4" class="w-24 p-2 text-center rounded-xl border-2 border-emerald-400 font-extrabold text-brandDark focus:outline-none" placeholder="?">
+                                <span class="font-bold text-sm text-slate-600">cm²</span>
+                            </div>
+                            <button type="button" onclick="checkGuided(4, 60)" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                                Cek Jawaban 4
+                            </button>
+                            <div id="feedback4" class="text-xs font-bold hidden"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SOAL 5 -->
+                <div class="bg-purple-50 p-5 rounded-2xl border-2 border-purple-200">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-black text-purple-900 text-base sm:text-lg">Soal 5: Bingkai Foto Square</span>
+                        <span class="text-xs bg-purple-200 text-purple-900 px-3 py-1 rounded-full font-bold">Persegi</span>
+                    </div>
+                    <p class="text-slate-700 text-sm mb-4">
+                        Sebuah bingkai foto keluarga berbentuk persegi dengan panjang sisi <b>10 cm</b>. Hitunglah luas bingkai foto tersebut!
+                    </p>
+
+                    <div class="flex flex-col sm:flex-row items-center gap-6 bg-white p-4 rounded-xl border border-purple-200">
+                        <svg class="w-28 h-28" viewBox="0 0 100 100">
+                            <rect x="10" y="10" width="80" height="80" fill="#DDD6FE" stroke="#7C3AED" stroke-width="5" rx="6"/>
+                            <text x="50" y="55" text-anchor="middle" font-size="11" font-weight="extrabold" fill="#5B21B6">s = 10 cm</text>
+                        </svg>
+
+                        <div class="flex-1 space-y-3 w-full">
+                            <div class="flex items-center gap-2">
+                                <label for="ans5" class="font-bold text-sm text-slate-700">Luas =</label>
+                                <input type="number" id="ans5" class="w-24 p-2 text-center rounded-xl border-2 border-purple-400 font-extrabold text-brandDark focus:outline-none" placeholder="?">
+                                <span class="font-bold text-sm text-slate-600">cm²</span>
+                            </div>
+                            <button type="button" onclick="checkGuided(5, 100)" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-xl text-xs font-bold transition">
+                                Cek Jawaban 5
+                            </button>
+                            <div id="feedback5" class="text-xs font-bold hidden"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Total Score & Finish Banner -->
+            <div class="mt-8 bg-gradient-to-r from-brandPink via-brandPurple to-brandBlue p-6 rounded-2xl text-white text-center shadow-lg">
+                <h3 class="text-xl font-black mb-2">🏆 Papan Skor Detektif Luas</h3>
+                <p class="text-sm opacity-90 mb-4">Selesaikan semua 5 soal di atas untuk mendapatkan bintang emas!</p>
+                <div id="totalScoreText" class="text-3xl font-black text-brandYellow">Skor Kamu: 0 / 5</div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-12 text-center text-xs text-slate-500 font-medium">
+        <p>Modul Interaktif Matematika SD Kelas 3 • Didesain Khusus untuk Pembelajaran Visual & Interaktif</p>
+    </footer>
+
+    <script>
+        // -------------------------------------------------------------
+        // 1. WARM-UP CHECKER LOGIC
+        // -------------------------------------------------------------
+        function checkWarmup() {
+            const correctAnswers = {
+                w1: 20, // 4 x 5
+                w2: 18, // 6 x 3
+                w3: 28, // 7 x 4
+                w4: 40, // 8 x 5
+                w5: 16, // Keliling persegi s=4 -> 4x4=16
+                w6: 24, // Keliling persegi s=6 -> 4x6=24
+                w7: 16, // Keliling p.panjang p=5, l=3 -> 2*(5+3)=16
+                w8: 18  // Keliling p.panjang p=7, l=2 -> 2*(7+2)=18
+            };
+
+            let score = 0;
+            let total = 8;
+
+            for (let id in correctAnswers) {
+                const inputElem = document.getElementById(id);
+                const val = parseInt(inputElem.value);
+                if (val === correctAnswers[id]) {
+                    score++;
+                    inputElem.classList.remove('border-rose-400', 'border-sky-400', 'border-red-500');
+                    inputElem.classList.add('border-emerald-500', 'bg-emerald-50');
+                } else {
+                    inputElem.classList.remove('border-rose-400', 'border-sky-400', 'border-emerald-500');
+                    inputElem.classList.add('border-red-500', 'bg-red-50');
+                }
+            }
+
+            const feedbackElem = document.getElementById('warmupFeedback');
+            feedbackElem.classList.remove('hidden');
+
+            if (score === total) {
+                feedbackElem.className = "mt-4 p-4 rounded-2xl font-bold text-center bg-emerald-100 text-emerald-800 border-2 border-emerald-300";
+                feedbackElem.innerHTML = `🎉 Horeee! Semua ${score} soal pemanasan benar! Kamu siap jadi Detektif Luas! 🚀`;
+                confetti({ particleCount: 50, spread: 60, origin: { y: 0.4 } });
+            } else {
+                feedbackElem.className = "mt-4 p-4 rounded-2xl font-bold text-center bg-amber-100 text-amber-900 border-2 border-amber-300";
+                feedbackElem.innerHTML = `Kamu berhasil menjawab <b>${score} dari ${total}</b> soal dengan benar. Periksa kotak berpendar merah dan coba lagi ya! 💪`;
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 2. INTERACTIVE GRID LAB GENERATOR
+        // -------------------------------------------------------------
+        function updateGridInteractive() {
+            const p = parseInt(document.getElementById('sliderPanjang').value);
+            const l = parseInt(document.getElementById('sliderLebar').value);
+
+            // Update Text Labels
+            document.getElementById('valPanjang').textContent = p;
+            document.getElementById('valLebar').textContent = l;
+            document.getElementById('calcRows').textContent = l;
+            document.getElementById('calcCols').textContent = p;
+            document.getElementById('calcTotal').textContent = p * l;
+
+            // Render Tiles Grid
+            const container = document.getElementById('interactiveGridContainer');
+            container.style.gridTemplateColumns = `repeat(${p}, minmax(0, 1fr))`;
+            container.innerHTML = '';
+
+            let counter = 1;
+            for (let r = 0; r < l; r++) {
+                for (let c = 0; c < p; c++) {
+                    const tile = document.createElement('div');
+                    tile.className = 'grid-tile w-10 h-10 sm:w-12 sm:h-12 bg-emerald-400 rounded-lg flex items-center justify-center font-black text-emerald-950 text-xs shadow cursor-pointer select-none';
+                    tile.textContent = counter;
+                    counter++;
+                    container.appendChild(tile);
+                }
+            }
+        }
+
+        // -------------------------------------------------------------
+        // 3. GUIDED PRACTICE EVALUATOR LOGIC
+        // -------------------------------------------------------------
+        const scoresState = {1: false, 2: false, 3: false, 4: false, 5: false};
+
+        function checkGuided(qNum, expectedAns) {
+            const inputVal = parseInt(document.getElementById(`ans${qNum}`).value);
+            const feedback = document.getElementById(`feedback${qNum}`);
+            feedback.classList.remove('hidden');
+
+            if (inputVal === expectedAns) {
+                feedback.className = "text-xs font-bold p-2 rounded-lg bg-emerald-100 text-emerald-800 border border-emerald-300";
+                feedback.innerHTML = `✅ HEBAT! Jawabannya BENAR (${expectedAns}).`;
+                scoresState[qNum] = true;
+            } else {
+                feedback.className = "text-xs font-bold p-2 rounded-lg bg-rose-100 text-rose-800 border border-rose-300";
+                feedback.innerHTML = `❌ Kurang tepat. Coba hitung lagi dengan mengalikan ukurannya!`;
+                scoresState[qNum] = false;
+            }
+
+            updateTotalScore();
+        }
+
+        function updateTotalScore() {
+            let total = 0;
+            for (let key in scoresState) {
+                if (scoresState[key] === true) total++;
+            }
+            const scoreText = document.getElementById('totalScoreText');
+            scoreText.textContent = `Skor Kamu: ${total} / 5`;
+
+            if (total === 5) {
+                scoreText.innerHTML = `🌟 SKOR SEMPURNA: 5 / 5! Kamu Ahli Luas! 🏆`;
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+        }
+
+        // Initialize Grid on Load
+        window.onload = function() {
+            updateGridInteractive();
+        };
+    </script>
+</body>
+</html>
